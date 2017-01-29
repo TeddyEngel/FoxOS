@@ -77,7 +77,7 @@ test_kernel:
 
 clean:
 	@echo "\nCleaning"
-	rm $(KERNEL_FILE_NAME).o $(BOOT_FILE_NAME).o
+	rm $(INTERNAL_OBJS)
 
 clean_all: clean
 	rm $(OSNAME).bin $(OSNAME).iso
