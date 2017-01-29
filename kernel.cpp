@@ -140,7 +140,9 @@ void kernel_main(void) {
     /* Initialize terminal interface */
     terminal_initialize();
  
+    terminal_setcolor(VGA_COLOR_LIGHT_RED);
     terminal_writestring(FOX_BANNER);
+    terminal_setcolor(VGA_COLOR_WHITE);
     // terminal_writestring(" ,-.      .-,\n |-.\\ __ /.-|\n \\  `    `  /\n / _     _  \\\n | _`q  p _ |\n \'._=/  \\=_.'\n   {`\\()/`}`\\                   FoxOS\n   {      }  \\\n   |{    }    \\\n   \\ '--'   .- \\\n   |-      /    \\\n   | | | | |     ;\n   | | |.;.,..__ |\n .-\"\";`         `|\n /    |           /\n `-../____,..---'`\n ");
     // terminal_writestring("Hello, kernel World1!\nHello, kernel World2!\nHello, kernel World3!\nHello, kernel World4!\nHello, kernel World5!\nHello, kernel World6!\nHello, kernel World7!\nHello, kernel World8!\nHello, kernel World9!\nHello, kernel World10!\nHello, kernel World11!\nHello, kernel World12!\nHello, kernel World13!\nHello, kernel World14!\nHello, kernel World15!\nHello, kernel World16!\nHello, kernel World17!\nHello, kernel World18!\nHello, kernel World19!\nHello, kernel World20!\nHello, kernel World21!\n\n\nhey\n\n\n\nHello, kernel World22!\nHello, kernel World23!\nHello, kernel World24!\nHello, kernel World25!\nHello, kernel World26!\nTeddy isn't too bad you think?\nI reckon it's true my friend yea hahahahah \n\n  pouet");
 }
