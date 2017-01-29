@@ -64,6 +64,7 @@ _start:
     # C++ features such as global constructors and exceptions will require
     # runtime support to work as well.
     call _init
+    call _fini
 
     # Enter the high-level kernel. The ABI requires the stack is 16-byte
     # aligned at the time of the call instruction (which afterwards pushes
@@ -71,10 +72,8 @@ _start:
     # aligned above and we've since pushed a multiple of 16 bytes to the
     # stack since (pushed 0 bytes so far) and the alignment is thus
     # preserved and the call is well defined.
+    call kernel_early_main
     call kernel_main
-
-    # To destroy everything
-    call _fini
 
     # If the system has nothing more to do, put the computer into an
     # infinite loop. To do that:
