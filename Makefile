@@ -1,13 +1,28 @@
 OSNAME = foxOS
 TRIPLET = i686-elf
+
 CC = $(TRIPLET)-g++
-AC = $(TRIPLET)-as
 OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostartfiles
+
+AC = $(TRIPLET)-as
+
+GRUB_CHECKER = grub-file
+
 BOOT_FILE_NAME = boot
 KERNEL_FILE_NAME = kernel
-GRUB_SANITY_CHECK = grub-file --is-x86-multiboot $(OSNAME).bin
 
-all: 
+GRUB_SANITY_CHECK = $(GRUB_CHECKER) --is-x86-multiboot $(OSNAME).bin
+
+DEPENDANCIES = $(CC) $(AC) $(GRUB_CHECKER)
+# Used to check all dependancies
+K := $(foreach exec,$(DEPENDANCIES),\
+	$(if $(shell which $(exec)),some string,$(error "No $(exec) in PATH)))
+
+all: check build
+
+check:
+
+build:
 	@echo "Building Bootloader"
 	$(AC) $(BOOT_FILE_NAME).s -o $(BOOT_FILE_NAME).o
 
