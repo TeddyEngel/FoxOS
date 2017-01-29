@@ -13,9 +13,9 @@ KERNEL_FILE_NAME = kernel
 
 GRUB_SANITY_CHECK = $(GRUB_CHECKER) --is-x86-multiboot $(OSNAME).bin
 
-DEPENDANCIES = $(CC) $(AC) $(GRUB_CHECKER)
-# Used to check all dependancies
-K := $(foreach exec,$(DEPENDANCIES),\
+DEPENDENCIES = $(CC) $(AC) $(GRUB_CHECKER)
+# Used to check all dependencies
+K := $(foreach exec,$(DEPENDENCIES),\
 	$(if $(shell which $(exec)),some string,$(error "No $(exec) in PATH)))
 
 all: check build
