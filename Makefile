@@ -17,7 +17,9 @@ GRUB_CFG_FILE = grub.cfg
 GRUB_ISO_BOOT_DIR = $(ISO_BOOT_DIR)/grub/
 GRUB_SANITY_CHECK = $(GRUB_FILE_CHECKER) --is-x86-multiboot $(OSNAME).bin
 
-DEPENDENCIES = $(CC) $(AC) $(GRUB_FILE_CHECKER) $(GRUB_MKRESCUE)
+QEMU = qemu-system-i386
+
+DEPENDENCIES = $(CC) $(AC) $(GRUB_FILE_CHECKER) $(GRUB_MKRESCUE) $(QEMU)
 # Used to check all dependencies
 K := $(foreach exec,$(DEPENDENCIES),\
 	$(if $(shell which $(exec)),some string,$(error "No $(exec) in PATH)))
@@ -44,6 +46,14 @@ build_iso:
 	cp $(OSNAME).bin $(ISO_BOOT_DIR)/$(OSNAME).bin
 	cp $(GRUB_CFG_FILE) $(GRUB_ISO_BOOT_DIR)/$(GRUB_CFG_FILE)
 	$(GRUB_MKRESCUE) -o $(OSNAME).iso $(ISO_DIR)
+
+test: test_iso
+
+test_iso:
+	$(QEMU) -cdrom $(OSNAME).iso
+
+test_kernel:
+	$(QEMU) -kernel $(OSNAME).bin
 
 clean:
 	@echo "\nCleaning"
