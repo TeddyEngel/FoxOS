@@ -75,7 +75,30 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
     const size_t index = y * VGA_WIDTH + x;
     terminal_buffer[index] = vga_entry(c, color);
 }
- 
+
+void terminal_scrolldown()
+{
+    // Move all lines up
+    for (size_t y = 0; y < VGA_HEIGHT - 1; y++)
+    {
+        for (size_t x = 0; x < VGA_WIDTH; x++)
+        {
+            const size_t index = y * VGA_WIDTH + x;
+            const size_t index_next_line = (y + 1) * VGA_WIDTH + x;
+
+            terminal_buffer[index] =  terminal_buffer[index_next_line];
+        }
+    }
+
+    // Clear last line
+    for (size_t x = 0; x < VGA_WIDTH; x++)
+    {
+        const size_t index = (VGA_HEIGHT - 1) * VGA_WIDTH + x;
+
+        terminal_buffer[index] = vga_entry(' ', terminal_color);
+    }
+}
+
 void terminal_putchar(char c) {
     // Handle newline
     if (c == '\n')
@@ -83,6 +106,12 @@ void terminal_putchar(char c) {
         terminal_column = 0;
         ++terminal_row;
         return;
+    }
+    // Handle scrolling
+    while (terminal_row >= VGA_HEIGHT)
+    {
+        terminal_scrolldown();
+        --terminal_row;
     }
     terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
     if (++terminal_column == VGA_WIDTH) {
@@ -92,22 +121,26 @@ void terminal_putchar(char c) {
     }
 }
  
-void terminal_write(const char* data, size_t size) {
+void terminal_write(const char* data, size_t size)
+{
     for (size_t i = 0; i < size; i++)
         terminal_putchar(data[i]);
 }
  
-void terminal_writestring(const char* data) {
+void terminal_writestring(const char* data)
+{
     terminal_write(data, strlen(data));
 }
- 
 
 extern "C" /* Use C linkage for kernel_main. */
 
 void kernel_main(void) {
+    const char* FOX_BANNER = " ,-.      .-,\n |-.\\ __ /.-|\n \\  `    `  /\n / _     _  \\\n | _`q  p _ |\n \'._=/  \\=_.'\n   {`\\()/`}`\\                   FoxOS\n   {      }  \\\n   |{    }    \\\n   \\ '--'   .- \\\n   |-      /    \\\n   | | | | |     ;\n   | | |.;.,..__ |\n .-\"\";`         `|\n /    |           /\n `-../____,..---'`\n ";
+
     /* Initialize terminal interface */
     terminal_initialize();
  
-    /* Newline support is left as an exercise. */
-    terminal_writestring("Hello, kernel World!\n");
+    terminal_writestring(FOX_BANNER);
+    // terminal_writestring(" ,-.      .-,\n |-.\\ __ /.-|\n \\  `    `  /\n / _     _  \\\n | _`q  p _ |\n \'._=/  \\=_.'\n   {`\\()/`}`\\                   FoxOS\n   {      }  \\\n   |{    }    \\\n   \\ '--'   .- \\\n   |-      /    \\\n   | | | | |     ;\n   | | |.;.,..__ |\n .-\"\";`         `|\n /    |           /\n `-../____,..---'`\n ");
+    // terminal_writestring("Hello, kernel World1!\nHello, kernel World2!\nHello, kernel World3!\nHello, kernel World4!\nHello, kernel World5!\nHello, kernel World6!\nHello, kernel World7!\nHello, kernel World8!\nHello, kernel World9!\nHello, kernel World10!\nHello, kernel World11!\nHello, kernel World12!\nHello, kernel World13!\nHello, kernel World14!\nHello, kernel World15!\nHello, kernel World16!\nHello, kernel World17!\nHello, kernel World18!\nHello, kernel World19!\nHello, kernel World20!\nHello, kernel World21!\n\n\nhey\n\n\n\nHello, kernel World22!\nHello, kernel World23!\nHello, kernel World24!\nHello, kernel World25!\nHello, kernel World26!\nTeddy isn't too bad you think?\nI reckon it's true my friend yea hahahahah \n\n  pouet");
 }
