@@ -1,15 +1,27 @@
 OSNAME = foxOS
 TRIPLET = i686-elf
 
+BOOT_FILE_NAME = boot
+KERNEL_FILE_NAME = kernel
+
+OBJS := $(KERNEL_FILE_NAME).o $(BOOT_FILE_NAME).o 
+# OBJS := $(KERNEL_FILE_NAME).o
 CC = $(TRIPLET)-g++
-OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostartfiles
+OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib
+# OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostartfiles
+CRTI = crti
+CRTI_OBJ = $(CRTI).o
+CRTBEGIN_OBJ := $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ := $(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
+CRTN = crtn
+CRTN_OBJ = $(CRTN).o
+OBJ_LINK_LIST := $(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
+INTERNAL_OBJS := $(CRTI_OBJ) $(OBJS) $(CRTN_OBJ)
 
 AC = $(TRIPLET)-as
 
 ISO_DIR = isodir/
 ISO_BOOT_DIR = $(ISO_DIR)/boot/
-BOOT_FILE_NAME = boot
-KERNEL_FILE_NAME = kernel
 
 GRUB_FILE_CHECKER = grub-file
 GRUB_MKRESCUE = grub-mkrescue
@@ -26,16 +38,24 @@ K := $(foreach exec,$(DEPENDENCIES),\
 
 all: build clean
 
-build: build_boot build_kernel build_iso
+build: build_crti build_boot build_kernel build_os build_iso
+
+build_crti:
+	@echo "\nBuilding Crtis"
+	$(AC) $(CRTI).s -o $(CRTI).o
+	$(AC) $(CRTN).s -o $(CRTN).o
 
 build_boot:
 	@echo "\nBuilding Bootloader"
 	$(AC) $(BOOT_FILE_NAME).s -o $(BOOT_FILE_NAME).o
 
-build_kernel:
+build_kernel: 
 	@echo "\nBuilding Kernel"
 	$(CC) $(OPTIONS) -c $(KERNEL_FILE_NAME).cpp -o $(KERNEL_FILE_NAME).o
-	$(CC) $(OPTIONS) -T linker.ld -o $(OSNAME).bin $(BOOT_FILE_NAME).o $(KERNEL_FILE_NAME).o -lgcc
+
+build_os:
+	@echo "\nBuilding OS"
+	$(CC) $(OPTIONS) -T linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
 
 	@echo "\nChecking if valid multiboot file"
 	$(GRUB_SANITY_CHECK) || (echo "$(GRUB_SANITY_CHECK) failed, code $$?"; exit 1)
