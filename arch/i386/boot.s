@@ -53,7 +53,7 @@ _start:
     # To set up a stack, we set the esp register to point to the top of our
     # stack (as it grows downwards on x86 systems). This is necessarily done
     # in assembly as languages such as C cannot function without a stack.
-    mov $stack_top, %esp
+    movl $stack_top, %esp
 
     # This is a good place to initialize crucial processor state before the
     # high-level kernel is entered. It's best to minimize the early
@@ -64,7 +64,6 @@ _start:
     # C++ features such as global constructors and exceptions will require
     # runtime support to work as well.
     call _init
-    call _fini
 
     # Enter the high-level kernel. The ABI requires the stack is 16-byte
     # aligned at the time of the call instruction (which afterwards pushes

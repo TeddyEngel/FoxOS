@@ -1,25 +1,35 @@
+DEFAULT_HOST := $(shell ../default-host.sh)
+HOST := $(DEFAULT_HOST)
 OSNAME = foxOS
-TRIPLET = i686-elf
+HOSTARCH := $(shell ../target-triplet-to-arch.sh $(HOST))
 
+ARCH_PATH = ./arch/$(HOSTARCH)/
 BOOT_FILE_NAME = boot
 KERNEL_FILE_NAME = kernel
 
-OBJS := $(KERNEL_FILE_NAME).o $(BOOT_FILE_NAME).o 
-CC = $(TRIPLET)-g++
+OBJS := $(KERNEL_FILE_NAME).o $(ARCH_PATH)/$(BOOT_FILE_NAME).o 
+# OBJS := $(KERNEL_FILE_NAME).o $(ARCH_PATH)$(BOOT_FILE_NAME).o 
+CC = $(HOST)-g++
 # Default CFLAGS:
 CFLAGS ?= -O2 -g
+CPPFLAGS ?= -O2 -g
+LDFLAGS ?=
+LIBS ?=
+
 # Add mandatory options to CFLAGS:
 CFLAGS := $(CFLAGS) -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib
 CRTI = crti
-CRTI_OBJ = $(CRTI).o
+CRTI_OBJ = $(ARCH_PATH)/$(CRTI).o
+# CRTI_OBJ = $(CRTI).o
 CRTBEGIN_OBJ := $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ := $(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
 CRTN = crtn
-CRTN_OBJ = $(CRTN).o
+CRTN_OBJ = $(ARCH_PATH)/$(CRTN).o
+# CRTN_OBJ = $(CRTN).o
 OBJ_LINK_LIST := $(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
 INTERNAL_OBJS := $(CRTI_OBJ) $(OBJS) $(CRTN_OBJ)
 
-AC = $(TRIPLET)-as
+AC = $(HOST)-as
 
 ISO_DIR = isodir/
 ISO_BOOT_DIR = $(ISO_DIR)/boot/
@@ -42,13 +52,18 @@ all: build clean
 build: build_crti build_boot build_kernel build_os build_iso
 
 build_crti:
+	@echo $(DEFAULT_HOST)
+	@echo $(HOSTARCH)
 	@echo "\nBuilding Crtis"
-	$(AC) $(CRTI).s -o $(CRTI).o
-	$(AC) $(CRTN).s -o $(CRTN).o
+	$(AC) $(ARCH_PATH)/$(CRTI).s -o $(ARCH_PATH)/$(CRTI).o
+	# $(AC) $(CRTI).s -o $(CRTI).o
+	$(AC) $(ARCH_PATH)/$(CRTN).s -o $(ARCH_PATH)/$(CRTN).o
+	# $(AC) $(CRTN).s -o $(CRTN).o
 
 build_boot:
 	@echo "\nBuilding Bootloader"
-	$(AC) $(BOOT_FILE_NAME).s -o $(BOOT_FILE_NAME).o
+	$(AC) $(ARCH_PATH)/$(BOOT_FILE_NAME).s -o $(ARCH_PATH)/$(BOOT_FILE_NAME).o
+	# $(AC) $(BOOT_FILE_NAME).s -o $(BOOT_FILE_NAME).o
 
 build_kernel: 
 	@echo "\nBuilding Kernel"
@@ -56,7 +71,8 @@ build_kernel:
 
 build_os:
 	@echo "\nBuilding OS"
-	$(CC) $(CFLAGS) -T linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
+	$(CC) $(CFLAGS) -T $(ARCH_PATH)/linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
+	# $(CC) $(CFLAGS) -T linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
 
 	@echo "\nChecking if valid multiboot file"
 	$(GRUB_SANITY_CHECK) || (echo "$(GRUB_SANITY_CHECK) failed, code $$?"; exit 1)
