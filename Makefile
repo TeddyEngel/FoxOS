@@ -5,10 +5,11 @@ BOOT_FILE_NAME = boot
 KERNEL_FILE_NAME = kernel
 
 OBJS := $(KERNEL_FILE_NAME).o $(BOOT_FILE_NAME).o 
-# OBJS := $(KERNEL_FILE_NAME).o
 CC = $(TRIPLET)-g++
-OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib
-# OPTIONS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -nostartfiles
+# Default CFLAGS:
+CFLAGS ?= -O2 -g
+# Add mandatory options to CFLAGS:
+CFLAGS := $(CFLAGS) -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib
 CRTI = crti
 CRTI_OBJ = $(CRTI).o
 CRTBEGIN_OBJ := $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
@@ -51,11 +52,11 @@ build_boot:
 
 build_kernel: 
 	@echo "\nBuilding Kernel"
-	$(CC) $(OPTIONS) -c $(KERNEL_FILE_NAME).cpp -o $(KERNEL_FILE_NAME).o
+	$(CC) $(CFLAGS) -c $(KERNEL_FILE_NAME).cpp -o $(KERNEL_FILE_NAME).o
 
 build_os:
 	@echo "\nBuilding OS"
-	$(CC) $(OPTIONS) -T linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
+	$(CC) $(CFLAGS) -T linker.ld -o $(OSNAME).bin $(OBJ_LINK_LIST) -lgcc
 
 	@echo "\nChecking if valid multiboot file"
 	$(GRUB_SANITY_CHECK) || (echo "$(GRUB_SANITY_CHECK) failed, code $$?"; exit 1)
