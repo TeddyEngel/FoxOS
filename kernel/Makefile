@@ -2,6 +2,7 @@ DEFAULT_HOST!=../default-host.sh
 HOST?=DEFAULT_HOST
 HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
 
+# Default
 CFLAGS?=-O2 -g
 CPPFLAGS?=-O2 -g
 LDFLAGS?=
@@ -14,10 +15,11 @@ EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
+# Mandatory
 CFLAGS:=$(CFLAGS) -std=gnu11 -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -Wall -Wextra
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lk
+LIBS:=$(LIBS) -nostdlib -lk -lgcc
 # LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
@@ -50,7 +52,7 @@ $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel
-.SUFFIXES: .o .cpp .S
+.SUFFIXES: .o .cpp .c .S
 
 all: $(OSNAME).kernel
 
@@ -69,9 +71,8 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 	# $(CC) -MD -c $< -o $@ $(CFLAGS)
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
-# .cpp.o:
-# .cpp.o:
-	# $(CXX) -MD -c $< -o $@ $(CPPFLAGS)
+.cpp.o:
+	$(CXX) -MD -c $< -o $@ $(CPPFLAGS)
 
 .S.o:
 	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
