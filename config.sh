@@ -16,7 +16,7 @@ export LIBDIR=$EXEC_PREFIX/lib
 export INCLUDEDIR=$PREFIX/include
 
 export CFLAGS='-O2 -g'
-export CPPFLAGS='-O2 -g'
+export CPPFLAGS='-O2 -g -fstack-protector'
 
 # Configure the target os name
 export OSNAME="$(./osname.sh)"
