@@ -71,7 +71,7 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 	# $(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .cpp.o:
-	$(CC) -MD -c $< -o $@ $(CPPFLAGS)
+	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 
 .S.o:
 	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
