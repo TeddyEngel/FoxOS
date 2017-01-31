@@ -1,7 +1,16 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#if defined(__cplusplus)
+    #include <stdint-gcc.h>
+#else
+    #include <stdint.h>
+#endif
+
+#if defined(__cplusplus)
+    #include <cstring>
+#else
+    #include <string.h>
+#endif
 
 #include <kernel/tty.h>
 
