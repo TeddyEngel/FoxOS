@@ -74,7 +74,8 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 
 .S.o:
 	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
-	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
+	# $(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 clean:
 	rm -f $(OSNAME).kernel
