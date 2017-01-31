@@ -30,5 +30,5 @@ export CPP="$CPP --sysroot=$SYSROOT"
 # because it was configured with --without-headers rather than --with-sysroot.
 if echo "$HOST" | grep -Eq -- '-elf($|-)'; then
   export CC="$CC -isystem=$INCLUDEDIR"
-  export CP="$CP -isystem=$INCLUDEDIR"
+  export CPP="$CPP -isystem=$INCLUDEDIR"
 fi
