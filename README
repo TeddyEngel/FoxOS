@@ -1,0 +1,22 @@
+FoxOS is a new operating system featuring foxes
+
+To configure:
+-------------
+
+1- Edit config.sh
+
+To build:
+---------
+
+1- Run headers.sh
+2- Run build.sh
+
+To test on qemu:
+---------------
+
+1- After building, run qemu.sh
+
+To clean:
+---------
+
+1- Run clean.sh
