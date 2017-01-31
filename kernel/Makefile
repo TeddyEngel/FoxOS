@@ -66,11 +66,12 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
 
 .c.o:
-	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	$(CC) -MD -c $< -o $@ $(CFLAGS)
+	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
 	# $(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .cpp.o:
-	$(CXX) -MD -c $< -o $@ $(CPPFLAGS)
+	$(CC) -MD -c $< -o $@ $(CPPFLAGS)
 
 .S.o:
 	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
