@@ -57,25 +57,25 @@ $(ARCHDIR)/crtn.o \
 all: $(OSNAME).kernel
 
 $(OSNAME).kernel: $(OBJS) $(ARCHDIR)/linker.ld
-	# $(CPP) -T $(ARCHDIR)/linker.ld -o $@ $(CPPFLAGS) $(LINK_LIST)
-	$(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
+	$(CPP) -T $(ARCHDIR)/linker.ld -o $@ $(CPPFLAGS) $(LINK_LIST)
+	# $(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
 	grub-file --is-x86-multiboot $(OSNAME).kernel
 
 $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
-	# OBJ=`$(CPP) $(CPPFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
-	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
+	OBJ=`$(CPP) $(CPPFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
+	# OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
 
 .c.o:
-	$(CC) -MD -c $< -o $@ $(CFLAGS)
-	# $(CPP) -MD -c $< -o $@ $(CPPFLAGS)
+	# $(CC) -MD -c $< -o $@ $(CFLAGS)
+	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 	# $(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .cpp.o:
 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 
 .S.o:
-	$(CC) -MD -c $< -o $@ $(CPPFLAGS)
-	# $(CPP) -MD -c $< -o $@ $(CPPFLAGS)
+	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
+	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 	# $(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 clean:
