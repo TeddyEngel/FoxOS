@@ -79,13 +79,14 @@ extern "C"
 void terminal_putchar(char c) {
 	unsigned char uc = c;
 
-    // Handle newline
+    // Newline
     if (uc == '\n')
     {
         terminal_column = 0;
         ++terminal_row;
         return;
     }
+    // Backspace
     else if (uc == '\b')
     {
         if (terminal_column == 0 && terminal_row > 0)
@@ -99,6 +100,14 @@ void terminal_putchar(char c) {
             --terminal_column;
             terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
         }
+        return;
+    }
+    // Horizontal tab
+    else if (uc == '\t')
+    {
+        terminal_column += 4;
+        if (terminal_column >= VGA_WIDTH)
+            terminal_column = VGA_WIDTH - 1;
         return;
     }
     // Handle scrolling
