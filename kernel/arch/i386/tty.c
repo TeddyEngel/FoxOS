@@ -86,6 +86,21 @@ void terminal_putchar(char c) {
         ++terminal_row;
         return;
     }
+    else if (uc == '\b')
+    {
+        if (terminal_column == 0 && terminal_row > 0)
+        {
+            terminal_column = VGA_WIDTH - 1;
+            --terminal_row;
+            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+        }
+        else if (terminal_column > 0)
+        {
+            --terminal_column;
+            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+        }
+        return;
+    }
     // Handle scrolling
     while (terminal_row >= VGA_HEIGHT)
     {
