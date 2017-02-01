@@ -93,13 +93,10 @@ void terminal_putchar(char c) {
         {
             terminal_column = VGA_WIDTH - 1;
             --terminal_row;
-            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
         }
         else if (terminal_column > 0)
-        {
             --terminal_column;
-            terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
-        }
+        terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
         return;
     }
     // Horizontal tab
@@ -110,7 +107,13 @@ void terminal_putchar(char c) {
             terminal_column = VGA_WIDTH - 1;
         return;
     }
-    // Handle scrolling
+    // Carriage return
+    else if (uc == '\r')
+    {
+        terminal_column = 0;
+        return;
+    }
+    // Scrolling
     while (terminal_row >= VGA_HEIGHT)
     {
         terminal_scrolldown();
