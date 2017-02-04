@@ -1,5 +1,5 @@
-#ifndef _CSTRING_H
-#define _CSTRING_H 1
+#ifndef _CSTRING
+#define _CSTRING 1
 
 // #include <sys/cdefs.h>
 
