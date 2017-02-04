@@ -3,10 +3,10 @@ HOST?=DEFAULT_HOST
 HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
 
 # Default
+AFLAGS?=
 CFLAGS?=-O2 -g
 CPPFLAGS?=-O2 -g
 LDFLAGS?=
-# LDFLAGS?=-lstdc++
 LIBS?=
 
 DESTDIR?=
@@ -16,16 +16,17 @@ BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 # Mandatory
+AFLAGS:=$(AFLAGS)
 CFLAGS:=$(CFLAGS) -std=gnu11 -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -Wall -Wextra
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lk++ -lgcc
-# LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
 
 include $(ARCHDIR)/make.config
 
+AFLAGS:=$(AFLAGS) $(KERNEL_ARCH_AFLAGS)
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
@@ -52,7 +53,8 @@ $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel
-.SUFFIXES: .o .cpp .c .S
+.SUFFIXES: .o .cpp .c .asm
+# .SUFFIXES: .o .cpp .c .S .s .asm
 
 all: $(OSNAME).kernel
 
@@ -68,15 +70,19 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 .c.o:
 	# $(CC) -MD -c $< -o $@ $(CFLAGS)
 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
-	# $(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .cpp.o:
 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 
-.S.o:
-	# $(CC) -MD -c $< -o $@ $(CPPFLAGS)
-	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
-	# $(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+# .s.o:
+# 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
+
+# .S.o:
+	# $(CC) -MD -c $< -o $@ $(CFLAGS)
+	# $(CPP) -MD -c $< -o $@ $(CPPFLAGS)
+
+.asm.o:
+	$(AC) $(AFLAGS) $< -o $@
 
 clean:
 	rm -f $(OSNAME).kernel
