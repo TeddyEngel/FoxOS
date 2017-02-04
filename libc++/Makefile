@@ -3,7 +3,7 @@ HOST?=DEFAULT_HOST
 HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
 
 CFLAGS?=-O2 -g
-CPPFLAGS?=
+CPPFLAGS?=-O2 -g
 LDFLAGS?=
 LIBS?=
 
@@ -16,7 +16,7 @@ LIBDIR?=$(EXEC_PREFIX)/lib
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS) -D__is_libc++ -Iinclude
 LIBK++_CFLAGS:=$(CFLAGS)
-LIBK++_CPPFLAGS:=$(CPPFLAGS) -D__is_libk++
+LIBK++_CPPFLAGS:=$(CPPFLAGS) -D__is_libkpp
 
 ARCHDIR=arch/$(HOSTARCH)
 
@@ -29,15 +29,18 @@ LIBK++_CPPFLAGS:=$(LIBK++_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 
 FREEOBJS=\
 $(ARCH_FREEOBJS) \
-# stdio/printf.o \
-# stdio/putchar.o \
-# stdio/puts.o \
+cstdio/outb.o \
+cstdio/inb.o \
+cstdio/inw.o \
+cstdio/printf.o \
+cstdio/putchar.o \
+cstdio/puts.o \
+cstring/memcmp.o \
+cstring/memcpy.o \
+cstring/memmove.o \
+cstring/memset.o \
+cstring/strlen.o \
 # stdlib/abort.o \
-# string/memcmp.o \
-# string/memcpy.o \
-# string/memmove.o \
-# string/memset.o \
-string/strlen.o \
 
 HOSTEDOBJS=\
 $(ARCH_HOSTEDOBJS) \
@@ -46,7 +49,7 @@ OBJS=\
 $(FREEOBJS) \
 $(HOSTEDOBJS) \
 
-LIBK_OBJS=$(FREEOBJS:.o=.libk++.o)
+LIBK++_OBJS=$(FREEOBJS:.o=.libk++.o)
 
 #BINARIES=libc.a libk.a # Not ready for libc yet.
 BINARIES=libk++.a
@@ -59,25 +62,19 @@ all: $(BINARIES)
 libc++.a: $(OBJS)
 	$(AR) rcs $@ $(OBJS)
 
-libk++.a: $(LIBK_OBJS)
-	$(AR) rcs $@ $(LIBK_OBJS)
+libk++.a: $(LIBK++_OBJS)
+	$(AR) rcs $@ $(LIBK++_OBJS)
 
-.c.o:
-	$(CPP) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+.cpp.o:
+	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 
-.c.S:
-	$(CPP) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
-
-.c.libk++.o:
-	$(CPP) -MD -c $< -o $@ $(LIBK++_CFLAGS) $(LIBK++_CPPFLAGS)
-
-.S.libk++.o:
-	$(CPP) -MD -c $< -o $@ $(LIBK++_CFLAGS) $(LIBK++_CPPFLAGS)
+.cpp.libk++.o:
+	$(CPP) -MD -c $< -o $@ $(LIBK++_CPPFLAGS)
 
 clean:
 	rm -f $(BINARIES) *.a
-	rm -f $(OBJS) $(LIBK_OBJS) *.o */*.o */*/*.o
-	rm -f $(OBJS:.o=.d) $(LIBK_OBJS:.o=.d) *.d */*.d */*/*.d
+	rm -f $(OBJS) $(LIBK++_OBJS) *.o */*.o */*/*.o
+	rm -f $(OBJS:.o=.d) $(LIBK++_OBJS:.o=.d) *.d */*.d */*/*.d
 
 install: install-headers install-libs
 
@@ -90,4 +87,4 @@ install-libs: $(BINARIES)
 	cp $(BINARIES) $(DESTDIR)$(LIBDIR)
 
 -include $(OBJS:.o=.d)
--include $(LIBK_OBJS:.o=.d)
+-include $(LIBK++_OBJS:.o=.d)

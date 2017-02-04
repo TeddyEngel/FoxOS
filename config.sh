@@ -1,11 +1,10 @@
-SYSTEM_HEADER_PROJECTS="libc libc++ kernel"
-PROJECTS="libc libc++ kernel"
+SYSTEM_HEADER_PROJECTS="libc++ kernel" # Add libc if needed
+PROJECTS="libc++ kernel" # Add libc if needed
 
 export MAKE=${MAKE:-make}
 export HOST=${HOST:-$(./default-host.sh)}
 
 export AR=${HOST}-ar
-export AS=${HOST}-as
 export AC=nasm
 export CC=${HOST}-gcc
 export CPP=${HOST}-g++

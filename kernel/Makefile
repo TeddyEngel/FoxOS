@@ -20,7 +20,8 @@ AFLAGS:=$(AFLAGS)
 CFLAGS:=$(CFLAGS) -std=gnu11 -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -Wall -Wextra
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lk -lk++ -lgcc
+LIBS:=$(LIBS) -nostdlib -lk++
+# LIBS:=$(LIBS) -nostdlib -lk -lk++ -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
 
@@ -54,7 +55,6 @@ $(ARCHDIR)/crtn.o \
 
 .PHONY: all clean install install-headers install-kernel
 .SUFFIXES: .o .cpp .c .asm
-# .SUFFIXES: .o .cpp .c .S .s .asm
 
 all: $(OSNAME).kernel
 
@@ -73,13 +73,6 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 
 .cpp.o:
 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
-
-# .s.o:
-# 	$(CPP) -MD -c $< -o $@ $(CPPFLAGS)
-
-# .S.o:
-	# $(CC) -MD -c $< -o $@ $(CFLAGS)
-	# $(CPP) -MD -c $< -o $@ $(CPPFLAGS)
 
 .asm.o:
 	$(AC) $(AFLAGS) $< -o $@

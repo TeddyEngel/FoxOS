@@ -28,16 +28,10 @@ typedef struct gdt_ptr gdt_ptr_t;
 
 /* This will be a function in start.asm. We use this to properly
 *  reload the new segment registers */
-#if defined(__cplusplus)
 extern "C"
-#else
-extern
-#endif
-void gdt_flush(uint32_t);
-
-#if defined(__cplusplus)
-extern "C"
-#endif
-void gdt_install(void);
+{
+    void gdt_flush(uint32_t);
+    void gdt_install(void);
+}
 
 #endif

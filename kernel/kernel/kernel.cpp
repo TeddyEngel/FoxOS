@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 #include <kernel/gdt.h>
 #include <kernel/tty.h>
