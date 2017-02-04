@@ -67,7 +67,6 @@ void terminal_putchar(char c)
     {
         terminal_cursor_column = 0;
         ++terminal_cursor_row;
-        terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
         return;
     }
     // Backspace
@@ -80,7 +79,6 @@ void terminal_putchar(char c)
         }
         else if (terminal_cursor_column > 0)
             --terminal_cursor_column;
-        terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
         terminal_putentryatcursor(' ', terminal_color);
         return;
     }
@@ -90,14 +88,12 @@ void terminal_putchar(char c)
         terminal_cursor_column += 4;
         if (terminal_cursor_column >= VGA_WIDTH)
             terminal_cursor_column = VGA_WIDTH - 1;
-        terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
         return;
     }
     // Carriage return
     else if (uc == '\r')
     {
         terminal_cursor_column = 0;
-        terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
         return;
     }
     // Scrolling
@@ -105,7 +101,6 @@ void terminal_putchar(char c)
     {
         terminal_scrolldown();
         --terminal_cursor_row;
-        terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
     }
     terminal_putentryatcursor(uc, terminal_color);
     if (++terminal_cursor_column == VGA_WIDTH) {
@@ -113,13 +108,13 @@ void terminal_putchar(char c)
         if (++terminal_cursor_row == VGA_HEIGHT)
             terminal_cursor_row = 0;
     }
-    terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
 }
 
 void terminal_write(const char* data, size_t size)
 {
     for (size_t i = 0; i < size; i++)
         terminal_putchar(data[i]);
+    terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
 }
 
 void terminal_writestring(const char* data)
