@@ -96,6 +96,7 @@ void terminal_putchar(char c)
         terminal_cursor_column = 0;
         return;
     }
+
     // Scrolling
     while (terminal_cursor_row >= VGA_HEIGHT)
     {
