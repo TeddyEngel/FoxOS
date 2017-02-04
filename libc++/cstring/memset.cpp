@@ -2,5 +2,8 @@
 
 void* memset(void*, int, size_t)
 {
-    return (void *)0;
+    unsigned char* buf = (unsigned char*) bufptr;
+    for (size_t i = 0; i < size; ++i)
+        buf[i] = (unsigned char) value;
+    return bufptr;
 }
