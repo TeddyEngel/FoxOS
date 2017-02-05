@@ -2,15 +2,15 @@
 
 #include <cstring>
 
-idt_entry_t idt_manager::entries[256];
+idt_entry_t idt_manager::entries[IDT_ENTRIES];
 idt_ptr_t   idt_manager::ptr;
 
 void idt_manager::initialize()
 {
-  ptr.limit = sizeof(idt_entry_t) * 256 - 1;
+  ptr.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
   ptr.base  = (uint32_t)&entries;
 
-  memset(&entries, 0, sizeof(idt_entry_t) * 256);
+  memset(&entries, 0, sizeof(idt_entry_t) * IDT_ENTRIES);
 
   set_gate(0, (uint32_t)isr0 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
   set_gate(1, (uint32_t)isr1 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
@@ -50,6 +50,10 @@ void idt_manager::initialize()
 
 void idt_manager::set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
+  if (num < 0)
+    return;
+  if (num > IDT_ENTRIES)
+    return;
   entries[num].base_lo = base & 0xFFFF;
   entries[num].base_hi = (base >> 16) & 0xFFFF;
 
