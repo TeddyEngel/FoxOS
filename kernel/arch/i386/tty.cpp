@@ -5,41 +5,60 @@
 
 #include "vga.h"
 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
-static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
+const size_t tty_manager::VGA_WIDTH = 80;
+const size_t tty_manager::VGA_HEIGHT = 25;
+uint16_t* const tty_manager::VGA_MEMORY = (uint16_t*) 0xB8000;
 
-static size_t terminal_cursor_row;
-static size_t terminal_cursor_column;
-static uint8_t terminal_color;
-static uint16_t* terminal_buffer;
+size_t tty_manager::_cursor_row;
+size_t tty_manager::_cursor_column;
+uint8_t tty_manager::_color;
+uint16_t* tty_manager::_buffer;
 
-void terminal_initialize(void)
+void tty_manager::initialize(void)
 {
-    terminal_cursor_row = 0;
-    terminal_cursor_column = 0;
-    terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-    terminal_buffer = VGA_MEMORY;
-    terminal_clear();
+    _cursor_row = 0;
+    _cursor_column = 0;
+    _color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+    _buffer = VGA_MEMORY;
+    clear();
 }
 
-void terminal_setcolor(uint8_t color)
+void tty_manager::write(const char* data, size_t size)
 {
-    terminal_color = color;
+    for (size_t i = 0; i < size; i++)
+        putchar(data[i]);
+    move_cursor(_cursor_column, _cursor_row);
 }
 
-void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y)
+void tty_manager::write_string(const char* data)
+{
+    write(data, strlen(data));
+}
+
+void tty_manager::clear()
+{
+    for (size_t y = 0; y < VGA_HEIGHT; ++y)
+        for (size_t x = 0; x < VGA_WIDTH; ++x)
+            put_entry_at(' ', _color, y, x);
+}
+
+void tty_manager::set_color(uint8_t color)
+{
+    _color = color;
+}
+
+void tty_manager::put_entry_at(unsigned char c, uint8_t color, size_t x, size_t y)
 {
     const size_t index = y * VGA_WIDTH + x;
-    terminal_buffer[index] = vga_entry(c, color);
+    _buffer[index] = vga_entry(c, color);
 }
 
-void terminal_putentryatcursor(unsigned char c, uint8_t color)
+void tty_manager::put_entry_at_cursor(unsigned char c, uint8_t color)
 {
-    terminal_putentryat(c, color, terminal_cursor_column, terminal_cursor_row);
+    put_entry_at(c, color, _cursor_column, _cursor_row);
 }
 
-void terminal_scrolldown()
+void tty_manager::scrolldown()
 {
     // Move all lines up
     for (size_t y = 0; y < VGA_HEIGHT - 1; y++)
@@ -49,81 +68,69 @@ void terminal_scrolldown()
             const size_t index = y * VGA_WIDTH + x;
             const size_t index_next_line = (y + 1) * VGA_WIDTH + x;
 
-            terminal_buffer[index] = terminal_buffer[index_next_line];
+            _buffer[index] = _buffer[index_next_line];
         }
     }
 
     // Clear last line
     for (size_t x = 0; x < VGA_WIDTH; x++)
-        terminal_putentryat(' ', terminal_color, x, (VGA_HEIGHT - 1));
+        put_entry_at(' ', _color, x, (VGA_HEIGHT - 1));
 }
 
-void terminal_putchar(char c)
+void tty_manager::putchar(char c)
 {
     unsigned char uc = c;
 
     // Newline
     if (uc == '\n')
     {
-        terminal_cursor_column = 0;
-        ++terminal_cursor_row;
+        _cursor_column = 0;
+        ++_cursor_row;
         return;
     }
     // Backspace
     else if (uc == '\b')
     {
-        if (terminal_cursor_column == 0 && terminal_cursor_row > 0)
+        if (_cursor_column == 0 && _cursor_row > 0)
         {
-            terminal_cursor_column = VGA_WIDTH - 1;
-            --terminal_cursor_row;
+            _cursor_column = VGA_WIDTH - 1;
+            --_cursor_row;
         }
-        else if (terminal_cursor_column > 0)
-            --terminal_cursor_column;
-        terminal_putentryatcursor(' ', terminal_color);
+        else if (_cursor_column > 0)
+            --_cursor_column;
+        put_entry_at_cursor(' ', _color);
         return;
     }
     // Horizontal tab
     else if (uc == '\t')
     {
-        terminal_cursor_column += 4;
-        if (terminal_cursor_column >= VGA_WIDTH)
-            terminal_cursor_column = VGA_WIDTH - 1;
+        _cursor_column += 4;
+        if (_cursor_column >= VGA_WIDTH)
+            _cursor_column = VGA_WIDTH - 1;
         return;
     }
     // Carriage return
     else if (uc == '\r')
     {
-        terminal_cursor_column = 0;
+        _cursor_column = 0;
         return;
     }
 
     // Scrolling
-    while (terminal_cursor_row >= VGA_HEIGHT)
+    while (_cursor_row >= VGA_HEIGHT)
     {
-        terminal_scrolldown();
-        --terminal_cursor_row;
+        scrolldown();
+        --_cursor_row;
     }
-    terminal_putentryatcursor(uc, terminal_color);
-    if (++terminal_cursor_column == VGA_WIDTH) {
-        terminal_cursor_column = 0;
-        if (++terminal_cursor_row == VGA_HEIGHT)
-            terminal_cursor_row = 0;
+    put_entry_at_cursor(uc, _color);
+    if (++_cursor_column == VGA_WIDTH) {
+        _cursor_column = 0;
+        if (++_cursor_row == VGA_HEIGHT)
+            _cursor_row = 0;
     }
 }
 
-void terminal_write(const char* data, size_t size)
-{
-    for (size_t i = 0; i < size; i++)
-        terminal_putchar(data[i]);
-    terminal_movecursor(terminal_cursor_column, terminal_cursor_row);
-}
-
-void terminal_writestring(const char* data)
-{
-    terminal_write(data, strlen(data));
-}
-
-void terminal_movecursor(uint8_t x, uint8_t y)
+void tty_manager::move_cursor(uint8_t x, uint8_t y)
 {
     if (x >= VGA_WIDTH)
         x = VGA_WIDTH - 1;
@@ -134,11 +141,4 @@ void terminal_movecursor(uint8_t x, uint8_t y)
     outb(0x3D5, index >> 8);          // Send the high cursor byte.
     outb(0x3D4, 15);                  // Tell the VGA board we are setting the low cursor byte.
     outb(0x3D5, index);               // Send the low cursor byte.
-}
-
-void terminal_clear()
-{
-    for (size_t y = 0; y < VGA_HEIGHT; ++y)
-        for (size_t x = 0; x < VGA_WIDTH; ++x)
-            terminal_putentryat(' ', terminal_color, y, x);
 }

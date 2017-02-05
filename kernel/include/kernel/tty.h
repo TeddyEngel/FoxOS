@@ -4,14 +4,33 @@
 #include <cstddef>
 #include <cstdint>
 
-extern "C"
+class tty_manager
 {
-void terminal_initialize(void);
-void terminal_putchar(char c);
-void terminal_write(const char* data, size_t size);
-void terminal_writestring(const char* data);
-void terminal_movecursor(uint8_t x, uint8_t y);
-void terminal_clear();
-}
+public:
+    static void initialize();
+    static void write(const char* data, size_t size);
+    static void write_string(const char* data);
+    static void clear();
+
+private:
+    static void set_color(uint8_t color);
+
+    static void put_entry_at(unsigned char c, uint8_t color, size_t x, size_t y);
+    static void put_entry_at_cursor(unsigned char c, uint8_t color);
+    static void scrolldown();
+    static void putchar(char c);
+    static void move_cursor(uint8_t x, uint8_t y);
+
+private:
+    static const size_t VGA_WIDTH;
+    static const size_t VGA_HEIGHT;
+    static uint16_t* const VGA_MEMORY;
+
+private:
+    static size_t _cursor_row;
+    static size_t _cursor_column;
+    static uint8_t _color;
+    static uint16_t* _buffer;
+};
 
 #endif

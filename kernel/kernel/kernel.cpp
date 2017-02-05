@@ -10,7 +10,7 @@ void kernel_early()
 {
     gdt_manager::initialize();
     idt_manager::initialize();
-    terminal_initialize();
+    tty_manager::initialize();
 }
 
 extern "C"
