@@ -34,6 +34,7 @@ cstdio/inb.o \
 cstdio/inw.o \
 cstdio/printf.o \
 cstdio/putchar.o \
+cstdio/putint.o \
 cstdio/puts.o \
 cstring/memcmp.o \
 cstring/memcpy.o \

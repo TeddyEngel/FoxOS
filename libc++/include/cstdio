@@ -12,6 +12,7 @@ extern "C"
     uint16_t inw(uint16_t port);
     int printf(const char* __restrict, ...);
     int putchar(int);
+    int putint(int);
     int puts(const char*);
 }
 
