@@ -30,8 +30,8 @@ public:
     static void set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
 
 private:
-    static idt_entry_t idt_entries[];
-    static idt_ptr_t   idt_ptr;
+    static idt_entry_t entries[];
+    static idt_ptr_t   ptr;
 };
 
 // These extern directives let us access the addresses of our ASM ISR handlers.
