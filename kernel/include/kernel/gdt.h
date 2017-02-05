@@ -3,6 +3,19 @@
 
 #include <cstdint>
 
+#define GDT_ENTRIES      5
+// #define GDT_FLAG_DATASEG 0x02
+// #define GDT_FLAG_CODESEG 0x0a
+// #define GDT_FLAG_TSS     0x09
+
+// #define GDT_FLAG_SEGMENT 0x10
+// #define GDT_FLAG_RING0   0x00
+// #define GDT_FLAG_RING3   0x60
+// #define GDT_FLAG_PRESENT 0x80
+
+// #define GDT_FLAG_4K      0x800
+// #define GDT_FLAG_32_BIT  0x400
+
 /* Defines a GDT entry. We say packed, because it prevents the
 *  compiler from doing things that it thinks is best: Prevent
 *  compiler "optimization" by packing */
