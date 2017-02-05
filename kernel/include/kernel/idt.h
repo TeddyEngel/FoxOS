@@ -3,6 +3,22 @@
 
 #include <cstdint>
 
+#define IDT_FLAG_PRESENT 0x80
+
+#define IDT_FLAG_RING0 0x00
+#define IDT_FLAG_RING3 0x60
+
+#define IDT_FLAG_32BIT 0x8
+
+#define IDT_FLAG_INTERRUPT_GATE 0x6
+#define IDT_FLAG_TRAP_GATE 0x7
+#define IDT_FLAG_TASK_GATE 0x5
+
+#define IDT_SELECTOR_RING0 0x0
+#define IDT_SELECTOR_RING3 0x3
+#define IDT_SELECTOR_GDT 0x0
+#define IDT_SELECTOR_LDT 0x4
+
 // A struct describing an interrupt gate.
 typedef struct idt_entry
 {
