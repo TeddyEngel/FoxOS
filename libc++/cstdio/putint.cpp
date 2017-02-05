@@ -4,7 +4,12 @@ int putint(int d)
 {
     bool isNegative = false;
 
-    if (d < 0)
+    if (d == 0)
+    {
+        putchar('0');
+        return d;
+    }
+    else if (d < 0)
     {
         isNegative = true;
         putchar('-');
