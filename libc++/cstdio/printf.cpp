@@ -41,7 +41,8 @@ int printf(const char* format, ...)
 
         const char* format_begun_at = format++;
 
-        if (*format == 'c') {
+        if (*format == 'c')
+        {
             format++;
             char c = (char) va_arg(parameters, int /* char promotes to int */);
             if (!maxrem) {
@@ -51,7 +52,21 @@ int printf(const char* format, ...)
             if (!print(&c, sizeof(c)))
                 return -1;
             written++;
-        } else if (*format == 's') {
+        }
+        else if (*format == 'd')
+        {
+            format++;
+            int d = va_arg(parameters, int);
+            if (!maxrem)
+            {
+                // TODO: Set errno to EOVERFLOW.
+                return -1;
+            }
+            putint(d);
+            written++;
+        }
+        else if (*format == 's')
+        {
             format++;
             const char* str = va_arg(parameters, const char*);
             size_t len = strlen(str);
@@ -62,7 +77,9 @@ int printf(const char* format, ...)
             if (!print(str, len))
                 return -1;
             written += len;
-        } else {
+        } 
+        else
+        {
             format = format_begun_at;
             size_t len = strlen(format);
             if (maxrem < len) {
