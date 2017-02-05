@@ -30,6 +30,8 @@ class gdt_manager
 {
 public:
     static void initialize();
+
+private:
     static void set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
 
 private:

@@ -27,8 +27,10 @@ class idt_manager
 {
 public:
     static void initialize();
-    static void set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
 
+private:
+    static void set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
+    
 private:
     static idt_entry_t entries[];
     static idt_ptr_t   ptr;
