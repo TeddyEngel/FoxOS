@@ -26,12 +26,22 @@ struct gdt_ptr
 } __attribute__((packed));
 typedef struct gdt_ptr gdt_ptr_t;
 
+class gdt_manager
+{
+public:
+    static void initialize();
+    static void set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
+
+private:
+    static gdt_entry_t entries[];
+    static gdt_ptr_t   ptr;
+};
+
 /* This will be a function in start.asm. We use this to properly
 *  reload the new segment registers */
 extern "C"
 {
     void gdt_flush(uint32_t);
-    void gdt_install(void);
 }
 
-#endif
+#endif /* _KERNEL_GDT_H */

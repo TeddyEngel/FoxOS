@@ -8,7 +8,7 @@
 extern "C"
 void kernel_early()
 {
-    gdt_install();
+    gdt_manager::initialize();
     idt_manager::initialize();
     terminal_initialize();
 }
