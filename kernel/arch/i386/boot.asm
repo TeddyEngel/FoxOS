@@ -31,7 +31,7 @@ align 4
 section .bss
 align 4
 stack_bottom:
-resb 16384 ; 16 KiB
+resb 32768 ; 32 KiB
 stack_top:
  
 ; The linker script specifies _start as the entry point to the kernel and the
@@ -65,12 +65,12 @@ _start:
     ; yet. The GDT should be loaded here. Paging should be enabled here.
     ; C++ features such as global constructors and exceptions will require
     ; runtime support to work as well.
-    extern kernel_early
-    call kernel_early
-
     ; Setting global constructors
     extern _init
     call _init
+
+    extern kernel_early
+    call kernel_early
  
     ; Enter the high-level kernel. The ABI requires the stack is 16-byte
     ; aligned at the time of the call instruction (which afterwards pushes
