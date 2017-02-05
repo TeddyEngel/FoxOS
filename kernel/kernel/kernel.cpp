@@ -2,12 +2,14 @@
 #include <cstdio>
 
 #include <kernel/gdt.h>
+#include <kernel/idt.h>
 #include <kernel/tty.h>
 
 extern "C"
 void kernel_early()
 {
     gdt_install();
+    idt_manager::initialize();
     terminal_initialize();
 }
 
