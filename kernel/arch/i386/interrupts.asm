@@ -68,11 +68,11 @@ isr_common_stub:
 
    call isr_handler
 
-   pop eax        ; reload the original data segment descriptor
-   mov ds, ax
-   mov es, ax
-   mov fs, ax
-   mov gs, ax
+   pop ebx        ; reload the original data segment descriptor
+   mov ds, bx
+   mov es, bx
+   mov fs, bx
+   mov gs, bx
 
    popa                     ; Pops edi,esi,ebp...
    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
