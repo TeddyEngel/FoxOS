@@ -25,8 +25,11 @@
 #define PIC2    0xA0    /* IO base address for slave PIC */
 #define PIC1_COMMAND  PIC1
 #define PIC1_DATA (PIC1+1)
+#define PIC1_IRQ_ENTRIES 8
 #define PIC2_COMMAND  PIC2
 #define PIC2_DATA (PIC2+1)
+#define PIC2_IRQ_ENTRIES 8
+#define PIC_IRQ_ENTRIES (PIC1_IRQ_ENTRIES + PIC2_IRQ_ENTRIES)
 
 #define ICW1_ICW4 0x01    //ICW4 (not) needed
 #define ICW1_SINGLE 0x02    // Single (cascade) mode
@@ -63,7 +66,7 @@ class idt_manager
 public:
     static void initialize();
     static bool are_interrupts_enabled();
-    
+
 private:
     static void remap_irqs(int offset1, int offset2);
     static void set_gate(uint8_t, uint32_t, uint16_t, uint8_t);

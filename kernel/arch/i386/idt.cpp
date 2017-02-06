@@ -13,6 +13,8 @@ void idt_manager::initialize()
 
   memset(&entries, 0, sizeof(idt_entry_t) * IDT_ENTRIES);
 
+  remap_irqs(PIC1, PIC1 + PIC1_IRQ_ENTRIES);
+
   set_gate(0, (uint32_t)isr0 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
   set_gate(1, (uint32_t)isr1 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
   set_gate(2, (uint32_t)isr2 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
