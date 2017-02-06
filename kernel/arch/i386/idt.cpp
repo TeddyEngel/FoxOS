@@ -1,5 +1,6 @@
 #include <kernel/idt.h>
 
+#include <cstdio>
 #include <cstring>
 
 idt_entry_t idt_manager::entries[IDT_ENTRIES];
@@ -46,6 +47,50 @@ void idt_manager::initialize()
   set_gate(31, (uint32_t)isr31 , 0x08, IDT_FLAG_INTERRUPT_GATE | IDT_FLAG_RING0 | IDT_FLAG_PRESENT | IDT_FLAG_32BIT);
 
   idt_flush((uint32_t)&ptr);
+}
+
+bool idt_manager::are_interrupts_enabled()
+{
+    unsigned long flags;
+    asm volatile ( "pushf\n\t"
+                   "pop %0"
+                   : "=g"(flags) );
+    return flags & (1 << 9);
+}
+
+/*
+arguments:
+  offset1 - vector offset for master PIC
+    vectors on the master become offset1..offset1+7
+  offset2 - same for slave PIC: offset2..offset2+7
+*/
+void idt_manager::remap_irqs(int offset1, int offset2)
+{
+  uint8_t a1, a2;
+ 
+  a1 = inb(PIC1_DATA);                        // save masks
+  a2 = inb(PIC2_DATA);
+ 
+  outb(PIC1_COMMAND, ICW1_INIT+ICW1_ICW4);  // starts the initialization sequence (in cascade mode)
+  io_wait();
+  outb(PIC2_COMMAND, ICW1_INIT+ICW1_ICW4);
+  io_wait();
+  outb(PIC1_DATA, offset1);                 // ICW2: Master PIC vector offset
+  io_wait();
+  outb(PIC2_DATA, offset2);                 // ICW2: Slave PIC vector offset
+  io_wait();
+  outb(PIC1_DATA, 4);                       // ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
+  io_wait();
+  outb(PIC2_DATA, 2);                       // ICW3: tell Slave PIC its cascade identity (0000 0010)
+  io_wait();
+ 
+  outb(PIC1_DATA, ICW4_8086);
+  io_wait();
+  outb(PIC2_DATA, ICW4_8086);
+  io_wait();
+ 
+  outb(PIC1_DATA, a1);   // restore saved masks.
+  outb(PIC2_DATA, a2);
 }
 
 void idt_manager::set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
