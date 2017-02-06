@@ -32,6 +32,7 @@ $(ARCH_FREEOBJS) \
 cstdio/outb.o \
 cstdio/inb.o \
 cstdio/inw.o \
+cstdio/io_wait.o \
 cstdio/printf.o \
 cstdio/putchar.o \
 cstdio/putint.o \
