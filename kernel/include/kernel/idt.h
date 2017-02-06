@@ -45,6 +45,8 @@ class idt_manager
 {
 public:
     static void initialize();
+    static void enable_interrupts();
+    static void disable_interrupts();
     static bool are_interrupts_enabled();
 
 private:

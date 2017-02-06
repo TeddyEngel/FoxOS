@@ -25,13 +25,23 @@ void idt_manager::initialize()
   idt_flush((uint32_t)&ptr);
 }
 
+void idt_manager::enable_interrupts()
+{
+  asm volatile ("sti");
+}
+
+void idt_manager::disable_interrupts()
+{
+  asm volatile ("cli");
+}
+
 bool idt_manager::are_interrupts_enabled()
 {
-    unsigned long flags;
-    asm volatile ( "pushf\n\t"
-                   "pop %0"
-                   : "=g"(flags) );
-    return flags & (1 << 9);
+  unsigned long flags;
+  asm volatile ( "pushf\n\t"
+                 "pop %0"
+                 : "=g"(flags) );
+  return flags & (1 << 9);
 }
 
 /*
