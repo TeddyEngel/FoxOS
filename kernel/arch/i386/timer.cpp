@@ -5,11 +5,9 @@
 #include <kernel/isr.h>
 #include <kernel/irq.h>
 
-// fct_handler isr_manager::handlers[IDT_ENTRIES] = { 0 };
-
 uint32_t timer_manager::_tick = 0;
 
-void timer_manager::on_tick(registers_t regs)
+void timer_manager::on_tick(registers_t)
 {
    ++_tick;
    printf("Tick: %d\n", _tick);
