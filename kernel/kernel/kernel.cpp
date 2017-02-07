@@ -17,11 +17,13 @@ void kernel_early()
     idt_manager::initialize();
     isr_manager::initialize();
 
-    // System clock
-    timer_manager::initialize(DEFAULT_FREQUENCY);
-
     // Terminal
     tty_manager::initialize();
+    
+    // System clock
+    idt_manager::enable_interrupts();
+    timer_manager::initialize(DEFAULT_FREQUENCY);
+    // timer_manager::initialize(DEFAULT_FREQUENCY);
 }
 
 extern "C"
@@ -34,6 +36,5 @@ void kernel_main(void)
     // asm volatile ("int $0x0");
     // asm volatile ("int $0x3");
 
-    idt_manager::enable_interrupts();
     // TODO: Check why I only get one from the clock
 }

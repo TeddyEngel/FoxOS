@@ -20,5 +20,5 @@ void irq_handler(registers_t regs)
     {
         fct_handler handler = isr_manager::get_handler(regs.int_no);
         handler(regs);
-    }
+    }   
 }
