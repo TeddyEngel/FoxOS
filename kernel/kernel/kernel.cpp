@@ -1,6 +1,7 @@
 #include <cstring>
 #include <cstdio>
 
+#include <kernel/cpu.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
 #include <kernel/isr.h>
@@ -19,22 +20,22 @@ void kernel_early()
 
     // Terminal
     tty_manager::initialize();
-    
+
     // System clock
     idt_manager::enable_interrupts();
     timer_manager::initialize(DEFAULT_FREQUENCY);
-    // timer_manager::initialize(DEFAULT_FREQUENCY);
 }
 
 extern "C"
 void kernel_main(void)
 {
+    // TODO: Add a method to display the header
     const char* FOX_BANNER = " ,-.      .-,\n |-.\\ __ /.-|\n \\  `    `  /\n / _     _  \\\n | _`q  p _ |\n \'._=/  \\=_.'\n   {`\\()/`}`\\                   FoxOS\n   {      }  \\\n   |{    }    \\\n   \\ '--'   .- \\\n   |-      /    \\\n   | | | | |     ;\n   | | |.;.,..__ |\n .-\"\";`         `|\n /    |           /\n `-../____,..---'`\n";
 	
     printf(FOX_BANNER);
 
-    // asm volatile ("int $0x0");
-    // asm volatile ("int $0x3");
-
-    // TODO: Check why I only get one from the clock
+    while (42)
+    {
+        cpu_manager::halt();
+    }
 }
