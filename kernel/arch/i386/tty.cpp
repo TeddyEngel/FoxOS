@@ -77,6 +77,16 @@ void tty_manager::scrolldown()
         put_entry_at(' ', _color, x, (VGA_HEIGHT - 1));
 }
 
+void tty_manager::scrolldown_if_needed()
+{
+    // Scrolling
+    while (_cursor_row >= VGA_HEIGHT)
+    {
+        scrolldown();
+        --_cursor_row;
+    }
+}
+
 void tty_manager::putchar(char c)
 {
     unsigned char uc = c;
@@ -86,6 +96,7 @@ void tty_manager::putchar(char c)
     {
         _cursor_column = 0;
         ++_cursor_row;
+        scrolldown_if_needed();
         return;
     }
     // Backspace
@@ -117,11 +128,7 @@ void tty_manager::putchar(char c)
     }
 
     // Scrolling
-    while (_cursor_row >= VGA_HEIGHT)
-    {
-        scrolldown();
-        --_cursor_row;
-    }
+    scrolldown_if_needed();
     put_entry_at_cursor(uc, _color);
     if (++_cursor_column == VGA_WIDTH) {
         _cursor_column = 0;

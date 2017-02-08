@@ -18,6 +18,7 @@ private:
     static void put_entry_at(unsigned char c, uint8_t color, size_t x, size_t y);
     static void put_entry_at_cursor(unsigned char c, uint8_t color);
     static void scrolldown();
+    static void scrolldown_if_needed();
     static void putchar(char c);
     static void move_cursor(uint8_t x, uint8_t y);
 
