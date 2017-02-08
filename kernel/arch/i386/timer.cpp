@@ -10,7 +10,7 @@ uint32_t timer_manager::_tick = 0;
 void timer_manager::on_tick(registers_t)
 {
    ++_tick;
-   printf("Tick: %d\n", _tick);
+   // printf("Tick: %d\n", _tick);
 }
 
 void timer_manager::initialize(uint32_t frequency)

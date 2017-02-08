@@ -15,7 +15,6 @@ void irq_handler(registers_t regs)
     // Send reset signal to master. (As well as slave, if necessary).
     outb(PIC_MASTER_COMMAND, PIC_EOI);
 
-    printf("IRQ interrupt: %d %d\n", regs.int_no, regs.err_code);
     if (isr_manager::has_handler(regs.int_no))
     {
         fct_handler handler = isr_manager::get_handler(regs.int_no);

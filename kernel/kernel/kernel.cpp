@@ -7,6 +7,7 @@
 #include <kernel/isr.h>
 #include <kernel/timer.h>
 #include <kernel/tty.h>
+#include <kernel/keyboard.h>
 
 extern "C"
 void kernel_early()
@@ -24,6 +25,9 @@ void kernel_early()
     // System clock
     idt_manager::enable_interrupts();
     timer_manager::initialize(DEFAULT_FREQUENCY);
+
+    // Keyboard
+    keyboard_manager::initialize();
 }
 
 extern "C"
