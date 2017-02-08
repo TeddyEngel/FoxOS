@@ -2,8 +2,8 @@
 ** Keyboard driver
 */
 
-#ifndef _KERNEL_KEYBOARD_H
-#define _KERNEL_KEYBOARD_H
+#ifndef _KERNEL_KEYBOARD_DRIVER_H
+#define _KERNEL_KEYBOARD_DRIVER_H
 
 #include <cstdint>
 
@@ -11,7 +11,7 @@
 
 #define KEYBOARD_DATA_BUFFER 0x60
 
-class keyboard_manager
+class keyboard_driver
 {
 public:
     static void initialize();
@@ -23,4 +23,4 @@ private:
     static uint8_t kbdus[];
 };
 
-#endif /* _KERNEL_KEYBOARD_H */
+#endif /* _KERNEL_KEYBOARD_DRIVER_H */

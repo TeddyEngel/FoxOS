@@ -7,7 +7,7 @@
 #include <kernel/isr.h>
 #include <kernel/timer.h>
 #include <kernel/tty.h>
-#include <kernel/keyboard.h>
+#include <kernel/keyboard_driver.h>
 
 extern "C"
 void kernel_early()
@@ -27,7 +27,7 @@ void kernel_early()
     timer_manager::initialize(DEFAULT_FREQUENCY);
 
     // Keyboard
-    keyboard_manager::initialize();
+    keyboard_driver::initialize();
 }
 
 extern "C"
