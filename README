@@ -7,7 +7,9 @@ On MacOSX:
 1- Start by installing homebrew
 2- Run: brew install homebrew/dupes/make --with-default-names
 3- Run: brew install libmpc
-4- Run: brew install grubloader
+4- Install GRUB: http://wiki.osdev.org/GRUB
+5- Install objconv
+6- Run: brew install xorriso
 
 To configure:
 -------------
