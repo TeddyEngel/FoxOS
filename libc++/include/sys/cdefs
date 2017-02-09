@@ -1,0 +1,6 @@
+#ifndef _SYS_CDEFS
+#define _SYS_CDEFS 1
+
+#define __foxos_libk 1
+
+#endif

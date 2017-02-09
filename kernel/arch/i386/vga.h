@@ -2,7 +2,7 @@
 #define ARCH_I386_VGA_H
 
 #if defined(__cplusplus)
-    #include <stdint-gcc.h>
+	#include <cstdint>
 #else
     #include <stdint.h>
 #endif
