@@ -5,12 +5,14 @@
 #include <kernel/isr.h>
 #include <kernel/irq.h>
 
+bool keyboard_driver::shiftPressed = false;
+
 /* KBDUS means US Keyboard Layout. This is a scancode table
 *  used to layout a standard US keyboard. I have left some
 *  comments in to give you an idea of what key is what, even
 *  though I set it's array index to 0. You can change that to
 *  whatever you want using a macro, if you wish! */
-uint8_t keyboard_driver::kbdus[128] =
+uint8_t keyboard_driver::kbdus[256] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
   '9', '0', '-', '=', '\b', /* Backspace */
@@ -48,6 +50,42 @@ uint8_t keyboard_driver::kbdus[128] =
     0,  /* F11 Key */
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
+    0,  '!', '@', '#', '$', '%', '^', '&', '*', '(', /* 9 */
+  ')', '_', '_', '+', '\b', /* Backspace */
+  '\t',         /* Tab */
+  'Q', 'W', 'E', 'R',   /* 19 */
+  'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n', /* Enter key */
+    0,          /* 29   - Control */
+  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', /* 39 */
+ '\"', '~',   0,        /* Left shift */
+ '|', 'Z', 'X', 'C', 'V', 'B', 'N',            /* 49 */
+  'M', '<', '>', '?',   0,              /* Right shift */
+  '*',
+    0,  /* Alt */
+  ' ',  /* Space bar */
+    0,  /* Caps lock */
+    0,  /* 59 - F1 key ... > */
+    0,   0,   0,   0,   0,   0,   0,   0,
+    0,  /* < ... F10 */
+    0,  /* 69 - Num lock*/
+    0,  /* Scroll Lock */
+    0,  /* Home key */
+    0,  /* Up Arrow */
+    0,  /* Page Up */
+  '-',
+    0,  /* Left Arrow */
+    0,
+    0,  /* Right Arrow */
+  '+',
+    0,  /* 79 - End key*/
+    0,  /* Down Arrow */
+    0,  /* Page Down */
+    0,  /* Insert Key */
+    0,  /* Delete Key */
+    0,   0,   0,
+    0,  /* F11 Key */
+    0,  /* F12 Key */
+    0,  /* All other keys are undefined */
 };  
 
 void keyboard_driver::initialize()
@@ -55,22 +93,78 @@ void keyboard_driver::initialize()
     isr_manager::register_handler(IRQ1, &on_keypress);
 } 
 
+void keyboard_driver::enable()
+{
+    int32_t data = inb(0x61);
+    outb(0x61, data & 0x7F);
+}
+
+void keyboard_driver::disable()
+{
+    int32_t data = inb(0x61);
+    outb(0x61, data | 0x80);
+}
+
+void keyboard_driver::restart()
+{    
+   disable();
+   enable();
+}
+
+uint8_t keyboard_driver::read_scancode()
+{
+    return inb(KEYBOARD_DATA_BUFFER);
+}
+
 void keyboard_driver::on_keypress(registers_t)
 {
     uint8_t scancode;
+    // bool shift_key_pressed = false;
+    scancode = read_scancode();
+
+    if(scancode == 0x2A)     
+    {
+      shiftPressed = true;
+      // puts("SHIFT DOWN\n");
+    }      
+    else if(scancode & 0xAA)
+    {
+      shiftPressed = false;
+      // puts("SHIFT UP\n");
+    }      
+    // else    
+    // {          
+     if (scancode & 0x80)
+     {
+          int shiftaltctrl = 1;//Put anything to see what special keys were pressed
+     }
+     else
+     {  
+        if (shiftPressed)
+            scancode += 128;
+        printf("%d\n", scancode);
+        // putchar(kbdus[scancode]);
+          // printtxt(kblayout[scancode]); //Prints the character which was pressed         
+     }     
+    // }
+
+    // uint8_t scancode;
 
     /* Read from the keyboard's data buffer */
-    scancode = inb(KEYBOARD_DATA_BUFFER);
+    // scancode = inb(KEYBOARD_DATA_BUFFER);
 
     /* If the top bit of the byte we read from the keyboard is
     *  set, that means that a key has just been released */
-    if (scancode & 0x80)
-    {
+    // if (scancode & 0x80)
+    // {
         /* You can use this one to see if the user released the
         *  shift, alt, or control keys... */
-    }
-    else
-    {
+        // scancode += 128;
+        // keyboard_driver::shiftPressed = true;
+        // puts("SHIFT-");
+    // }
+    // else
+    // {
         /* Here, a key was just pressed. Please note that if you
         *  hold a key down, you will get repeated key press
         *  interrupts. */
@@ -83,6 +177,8 @@ void keyboard_driver::on_keypress(registers_t)
         *  to the above layout to correspond to 'shift' being
         *  held. If shift is held using the larger lookup table,
         *  you would add 128 to the scancode when you look for it */
-        putchar(kbdus[scancode]);
-    }
+        // if (keyboard_driver::shiftPressed)
+        //     scancode += 128;
+        // putchar(kbdus[scancode]);
+    // }
 }
