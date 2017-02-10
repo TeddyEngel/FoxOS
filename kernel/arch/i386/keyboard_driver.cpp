@@ -122,21 +122,34 @@ void keyboard_driver::on_keypress(registers_t)
     // bool shift_key_pressed = false;
     scancode = read_scancode();
 
-    if(scancode == 0x2A)     
+    if (shiftPressed)
+        printf("1:shift is pressed, scancode: %d\n", scancode);
+    // else
+    //     printf("shift is not pressed");
+
+    if(scancode == KEY_LEFT_SHIFT)     
     {
       shiftPressed = true;
-      // puts("SHIFT DOWN\n");
+      puts("SHIFT DOWN\n");
+      return;
     }      
-    else if(scancode & 0xAA)
+    else if(scancode & KEY_SHIFT_UP_FLAG)
     {
       shiftPressed = false;
-      // puts("SHIFT UP\n");
+      puts("SHIFT UP\n");
     }      
+
+    // if (shiftPressed)
+    //     printf("2:shift is pressed");
+    // else
+    //     printf("shift is not pressed");
     // else    
-    // {          
-     if (scancode & 0x80)
+    // {    
+
+     else if (scancode & 0x80)
      {
           int shiftaltctrl = 1;//Put anything to see what special keys were pressed
+          printf("SPECIAL KEY\n");
      }
      else
      {  

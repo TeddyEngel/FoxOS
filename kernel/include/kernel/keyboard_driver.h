@@ -10,6 +10,8 @@
 #include <kernel/registers.h>
 
 #define KEYBOARD_DATA_BUFFER 0x60
+#define KEY_LEFT_SHIFT 0x2A
+#define KEY_SHIFT_UP_FLAG 0xAA
 
 class keyboard_driver
 {
