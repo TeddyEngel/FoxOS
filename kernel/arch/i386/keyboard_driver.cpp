@@ -1,18 +1,30 @@
+/*
+** "Simple" keyboard driver
+**
+** TODO:
+** Handle caps lock
+** Handle arrows
+** Add dvorak mapping
+*/
+
 #include <kernel/keyboard_driver.h>
 
 #include <cstdio>
 
 #include <kernel/isr.h>
 #include <kernel/irq.h>
+#include <kernel/tty.h>
 
-bool keyboard_driver::shiftPressed = false;
+uint8_t keyboard_driver::_status = 0;
+uint8_t keyboard_driver::_scancode = 0;
+bool keyboard_driver::_shiftPressed = false;
 
-/* KBDUS means US Keyboard Layout. This is a scancode table
+/* KBDUS means US Keyboard Layout. This is a _scancode table
 *  used to layout a standard US keyboard. I have left some
 *  comments in to give you an idea of what key is what, even
 *  though I set it's array index to 0. You can change that to
 *  whatever you want using a macro, if you wish! */
-uint8_t keyboard_driver::kbdus[256] =
+uint8_t keyboard_driver::_kbdus[256] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
   '9', '0', '-', '=', '\b', /* Backspace */
@@ -50,6 +62,14 @@ uint8_t keyboard_driver::kbdus[256] =
     0,  /* F11 Key */
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
+
+    /* Buffer keys */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    /* End of buffer keys */
+
     0,  '!', '@', '#', '$', '%', '^', '&', '*', '(', /* 9 */
   ')', '_', '_', '+', '\b', /* Backspace */
   '\t',         /* Tab */
@@ -111,87 +131,53 @@ void keyboard_driver::restart()
    enable();
 }
 
+uint8_t keyboard_driver::read_status()
+{
+    return inb(KEYBOARD_STATUS_PORT);
+}
+
 uint8_t keyboard_driver::read_scancode()
 {
-    return inb(KEYBOARD_DATA_BUFFER);
+    return inb(KEYBOARD_SCANCODE_PORT);
+}
+
+void keyboard_driver::show_light_if_needed()
+{
+    // TODO: Implement
+    // 0xED using the described method, then you send the byte that says which lights are to be on or off. 
+    // This byte has the following format: Bit0 is Scroll lock, Bit1 is Num lock, and Bit2 is Caps lock. 
 }
 
 void keyboard_driver::on_keypress(registers_t)
 {
-    uint8_t scancode;
-    // bool shift_key_pressed = false;
-    scancode = read_scancode();
+    _status = read_status();
+    _scancode = read_scancode();
 
-    if (shiftPressed)
-        printf("1:shift is pressed, scancode: %d\n", scancode);
-    // else
-    //     printf("shift is not pressed");
-
-    if(scancode == KEY_LEFT_SHIFT)     
+    // When the key is down
+    if(!(_scancode & 0x80))
     {
-      shiftPressed = true;
-      puts("SHIFT DOWN\n");
-      return;
-    }      
-    else if(scancode & KEY_SHIFT_UP_FLAG)
+        // Handle special keys
+        if(_scancode == SHFT)     
+        {
+            _shiftPressed = true;
+            return;
+        }
+        else if (_scancode == LEFT)
+        {
+            tty_manager::move_cursor_left();
+            return;
+        }
+        if (_shiftPressed == true)
+            _scancode += 128;
+        putchar(_kbdus[_scancode]);
+    }
+    // When the key is back up
+    else
     {
-      shiftPressed = false;
-      puts("SHIFT UP\n");
-    }      
-
-    // if (shiftPressed)
-    //     printf("2:shift is pressed");
-    // else
-    //     printf("shift is not pressed");
-    // else    
-    // {    
-
-     else if (scancode & 0x80)
-     {
-          int shiftaltctrl = 1;//Put anything to see what special keys were pressed
-          printf("SPECIAL KEY\n");
-     }
-     else
-     {  
-        if (shiftPressed)
-            scancode += 128;
-        printf("%d\n", scancode);
-        // putchar(kbdus[scancode]);
-          // printtxt(kblayout[scancode]); //Prints the character which was pressed         
-     }     
-    // }
-
-    // uint8_t scancode;
-
-    /* Read from the keyboard's data buffer */
-    // scancode = inb(KEYBOARD_DATA_BUFFER);
-
-    /* If the top bit of the byte we read from the keyboard is
-    *  set, that means that a key has just been released */
-    // if (scancode & 0x80)
-    // {
-        /* You can use this one to see if the user released the
-        *  shift, alt, or control keys... */
-        // scancode += 128;
-        // keyboard_driver::shiftPressed = true;
-        // puts("SHIFT-");
-    // }
-    // else
-    // {
-        /* Here, a key was just pressed. Please note that if you
-        *  hold a key down, you will get repeated key press
-        *  interrupts. */
-
-        /* Just to show you how this works, we simply translate
-        *  the keyboard scancode into an ASCII value, and then
-        *  display it to the screen. You can get creative and
-        *  use some flags to see if a shift is pressed and use a
-        *  different layout, or you can add another 128 entries
-        *  to the above layout to correspond to 'shift' being
-        *  held. If shift is held using the larger lookup table,
-        *  you would add 128 to the scancode when you look for it */
-        // if (keyboard_driver::shiftPressed)
-        //     scancode += 128;
-        // putchar(kbdus[scancode]);
-    // }
+        if(_scancode == SHFT + KEY_UP_DECAL)     
+        {
+            _shiftPressed = false;
+            return;
+        }   
+    }
 }
