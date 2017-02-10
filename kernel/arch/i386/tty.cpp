@@ -49,25 +49,54 @@ void tty_manager::move_cursor_left()
     {
         _cursor_column = VGA_WIDTH - 1;
         --_cursor_row;
-        return;
     }
-    --_cursor_column;
+    else if (_cursor_column == 0 && _cursor_row == 0)
+    {
+        scrollup();
+        _cursor_column = VGA_WIDTH - 1;
+    }
+    else
+    {
+        --_cursor_column;
+    }
     move_physical_cursor(_cursor_column, _cursor_row);
 }
 
 void tty_manager::move_cursor_right()
 {
-
+    if (_cursor_column == VGA_WIDTH - 1 && _cursor_row < VGA_HEIGHT - 1)
+    {
+        _cursor_column = 0;
+        ++_cursor_row;
+    }
+    else if (_cursor_column == VGA_WIDTH - 1 && _cursor_row == VGA_HEIGHT - 1)
+    {
+        scrolldown();
+        _cursor_column = 0;
+    }
+    else
+    {
+        ++_cursor_column;
+    }
+    move_physical_cursor(_cursor_column, _cursor_row);
 }
 
 void tty_manager::move_cursor_up()
 {
-
+    if (_cursor_row == 0)
+        scrollup();
+    else
+        --_cursor_row;
+    move_physical_cursor(_cursor_column, _cursor_row);
 }
 
 void tty_manager::move_cursor_down()
 {
-
+    if (_cursor_row == VGA_HEIGHT - 1)
+        scrolldown();
+    else
+        ++_cursor_row;
+    move_physical_cursor(_cursor_column, _cursor_row);
 }
 
 void tty_manager::set_color(uint8_t color)
@@ -86,12 +115,32 @@ void tty_manager::put_entry_at_cursor(unsigned char c, uint8_t color)
     put_entry_at(c, color, _cursor_column, _cursor_row);
 }
 
+void tty_manager::scrollup()
+{
+    // TODO: Fill the top line with history line
+    // For now we just clear the first line
+    for (size_t x = 0; x < VGA_WIDTH; x++)
+        put_entry_at(' ', _color, x, 0);
+
+    // Move all lines down
+    for (size_t y = VGA_HEIGHT - 1; y >= 1; --y)
+    {
+        for (size_t x = 0; x < VGA_WIDTH; ++x)
+        {
+            const size_t index = y * VGA_WIDTH + x;
+            const size_t index_previous_line = (y - 1) * VGA_WIDTH + x;
+
+            _buffer[index] = _buffer[index_previous_line];
+        }
+    }
+}
+
 void tty_manager::scrolldown()
 {
     // Move all lines up
-    for (size_t y = 0; y < VGA_HEIGHT - 1; y++)
+    for (size_t y = 0; y < VGA_HEIGHT - 1; ++y)
     {
-        for (size_t x = 0; x < VGA_WIDTH; x++)
+        for (size_t x = 0; x < VGA_WIDTH; ++x)
         {
             const size_t index = y * VGA_WIDTH + x;
             const size_t index_next_line = (y + 1) * VGA_WIDTH + x;
@@ -105,16 +154,6 @@ void tty_manager::scrolldown()
         put_entry_at(' ', _color, x, (VGA_HEIGHT - 1));
 }
 
-void tty_manager::scrolldown_if_needed()
-{
-    // Scrolling
-    while (_cursor_row >= VGA_HEIGHT)
-    {
-        scrolldown();
-        --_cursor_row;
-    }
-}
-
 void tty_manager::putchar(char c)
 {
     unsigned char uc = c;
@@ -122,9 +161,7 @@ void tty_manager::putchar(char c)
     // Newline
     if (uc == '\n')
     {
-        _cursor_column = 0;
-        ++_cursor_row;
-        scrolldown_if_needed();
+        move_cursor_newline();
         return;
     }
     // Backspace
@@ -137,26 +174,21 @@ void tty_manager::putchar(char c)
     // Horizontal tab
     else if (uc == '\t')
     {
-        _cursor_column += TAB_WIDTH;
-        if (_cursor_column >= VGA_WIDTH)
-            _cursor_column = VGA_WIDTH - 1;
+        int i = 0;
+
+        while (i++ < TAB_WIDTH)
+            move_cursor_right();
         return;
     }
     // Carriage return
     else if (uc == '\r')
     {
-        _cursor_column = 0;
+        move_cursor_beginline();
         return;
     }
 
-    // Scrolling
-    scrolldown_if_needed();
     put_entry_at_cursor(uc, _color);
-    if (++_cursor_column == VGA_WIDTH) {
-        _cursor_column = 0;
-        if (++_cursor_row == VGA_HEIGHT)
-            _cursor_row = 0;
-    }
+    move_cursor_right();
 }
 
 void tty_manager::move_physical_cursor(uint8_t column, uint8_t row)
@@ -170,4 +202,19 @@ void tty_manager::move_physical_cursor(uint8_t column, uint8_t row)
     outb(0x3D5, index >> 8);          // Send the high cursor byte.
     outb(0x3D4, 15);                  // Tell the VGA board we are setting the low cursor byte.
     outb(0x3D5, index);               // Send the low cursor byte.
+}
+
+void tty_manager::move_cursor_newline()
+{
+    if (_cursor_row == VGA_HEIGHT - 1)
+        scrolldown();
+    else
+        ++_cursor_row;
+    _cursor_column = 0;
+    move_physical_cursor(_cursor_column, _cursor_row);
+}
+
+void tty_manager::move_cursor_beginline()
+{
+    _cursor_column = 0;
 }
