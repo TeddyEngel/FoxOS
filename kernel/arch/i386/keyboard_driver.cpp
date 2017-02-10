@@ -167,6 +167,21 @@ void keyboard_driver::on_keypress(registers_t)
             tty_manager::move_cursor_left();
             return;
         }
+        else if (_scancode == RGHT)
+        {
+            tty_manager::move_cursor_right();
+            return;
+        }
+        else if (_scancode == UP)
+        {
+            tty_manager::move_cursor_up();
+            return;
+        }
+        else if (_scancode == DOWN)
+        {
+            tty_manager::move_cursor_down();
+            return;
+        }
         if (_shiftPressed == true)
             _scancode += 128;
         putchar(_kbdus[_scancode]);
