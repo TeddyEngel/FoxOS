@@ -2,7 +2,7 @@
 
 uint32_t placement_address = 0x0;
 
-uint32_t kmalloc_int(uint32_t sz, bool align, uint32_t* physicalAddressicalAddress)
+uint32_t kmalloc_int(uint32_t sz, bool align, uint32_t* physicalAddress)
 {
     if (align == true && (placement_address & 0xFFFFF000)) // If the address is not already page-aligned
     {
