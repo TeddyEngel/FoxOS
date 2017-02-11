@@ -4,6 +4,7 @@
 ** TODO:
 ** Handle caps lock
 ** Add dvorak mapping
+** Write scancodes translated to some memory area
 */
 
 #include <kernel/keyboard_driver.h>
