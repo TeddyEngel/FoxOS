@@ -1,0 +1,8 @@
+#ifndef _MEMORY
+#define _MEMORY 1
+
+#include <cstdint>
+
+uint32_t kmalloc(uint32_t sz);
+
+#endif /* _MEMORY */
