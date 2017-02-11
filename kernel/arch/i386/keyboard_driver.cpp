@@ -3,7 +3,6 @@
 **
 ** TODO:
 ** Handle caps lock
-** Handle arrows
 ** Add dvorak mapping
 */
 
