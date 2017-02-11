@@ -3,6 +3,6 @@
 
 #include <cstdint>
 
-uint32_t kmalloc(uint32_t sz);
+uint32_t kmalloc(uint32_t sz, bool align, uint32_t* physicalAddress);
 
 #endif /* _MEMORY */
