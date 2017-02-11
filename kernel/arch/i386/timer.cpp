@@ -2,8 +2,11 @@
 
 #include <cstdio>
 
-#include <kernel/isr.h>
+#include <kernel/KernelManager.h>
+#include <kernel/InterruptManager.h>
 #include <kernel/irq.h>
+
+extern KernelManager kernelManager;
 
 uint32_t timer_manager::_tick = 0;
 
@@ -16,7 +19,10 @@ void timer_manager::on_tick(registers_t)
 void timer_manager::initialize(uint32_t frequency)
 {
     // Firstly, register our timer callback.
-    isr_manager::register_handler(IRQ0, &on_tick);
+    InterruptManager& interruptManager = kernelManager.getInterruptManager();
+    interruptManager.registerHandler(IRQ0, &on_tick);
+
+    fct_handler handler = interruptManager.getHandler(IRQ0);
 
     // The value we send to the PIT is the value to divide it's input clock
     // (1193180 Hz) by, to get our required frequency. Important to note is

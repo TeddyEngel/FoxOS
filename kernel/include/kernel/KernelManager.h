@@ -9,6 +9,9 @@ class KernelManager
 public:
     KernelManager();
 
+    GdtManager& getGdtManager();
+    InterruptManager& getInterruptManager();
+
     void initialize();
     void runLoop();
 

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <kernel/registers.h>
+
 #define IDT_ENTRIES 256
 
 #define IDT_FLAG_PRESENT 0x80
@@ -38,5 +40,10 @@ typedef struct idt_ptr
    uint16_t limit;
    uint32_t base;                // The address of the first element in our idt_entry_t array.
 } __attribute__((packed)) idt_ptr_t;
+
+// Enables registration of callbacks for interrupts or IRQs.
+// For IRQs, to ease confusion, use the #defines above as the
+// first parameter.
+typedef void (*fct_handler)(registers_t);
 
 #endif /* _KERNEL_IDT_TYPES_H */

@@ -1,6 +1,6 @@
 #include <kernel/KernelManager.h>
 
-static KernelManager kernelManager;
+KernelManager kernelManager;
 
 extern "C"
 void kernel_early()

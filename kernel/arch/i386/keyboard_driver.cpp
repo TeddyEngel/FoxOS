@@ -11,9 +11,12 @@
 
 #include <cstdio>
 
-#include <kernel/isr.h>
+#include <kernel/KernelManager.h>
+#include <kernel/InterruptManager.h>
 #include <kernel/irq.h>
 #include <kernel/tty.h>
+
+extern KernelManager kernelManager;
 
 uint8_t keyboard_driver::_status = 0;
 uint8_t keyboard_driver::_scancode = 0;
@@ -110,7 +113,8 @@ uint8_t keyboard_driver::_kbdus[256] =
 
 void keyboard_driver::initialize()
 {
-    isr_manager::register_handler(IRQ1, &on_keypress);
+    InterruptManager& interruptManager = kernelManager.getInterruptManager();
+    interruptManager.registerHandler(IRQ1, &on_keypress);
 } 
 
 void keyboard_driver::enable()

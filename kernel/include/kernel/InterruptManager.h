@@ -5,15 +5,21 @@
 
 #include <kernel/idt_types.h>
 #include <kernel/idt_flush.h>
+#include <kernel/isr_handlers.h>
 
 class InterruptManager
 {
 public:
     InterruptManager();
     void initialize();
+
     void enableInterrupts();
     void disableInterrupts();
     bool areInterruptsEnabled();
+
+    bool hasHandler(uint8_t n);
+    fct_handler getHandler(uint8_t n);
+    void registerHandler(uint8_t n, fct_handler);
 
 private:
     void remapIrqs(int32_t offset1, int32_t offset2);
@@ -24,6 +30,7 @@ private:
 private:
     idt_entry_t entries[IDT_ENTRIES];
     idt_ptr_t   ptr;
+    fct_handler handlers[IDT_ENTRIES];
 };
 
 #endif /* _KERNEL_IDT_H */

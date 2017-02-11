@@ -4,11 +4,12 @@
 #include <cstring>
 
 #include <kernel/pic.h>
-#include <kernel/isr.h>
 #include <kernel/irq.h>
 
 InterruptManager::InterruptManager()
 {
+  for (int i = 0; i < IDT_ENTRIES; ++i)
+    handlers[i] = 0;
 }
 
 void InterruptManager::initialize()
@@ -44,6 +45,21 @@ bool InterruptManager::areInterruptsEnabled()
                  "pop %0"
                  : "=g"(flags) );
   return flags & (1 << 9);
+}
+
+bool InterruptManager::hasHandler(uint8_t n)
+{
+    return handlers[n] != 0;
+}
+
+fct_handler InterruptManager::getHandler(uint8_t n)
+{
+    return handlers[n];
+}
+
+void InterruptManager::registerHandler(uint8_t n, fct_handler handler)
+{
+    handlers[n] = handler;
 }
 
 /*

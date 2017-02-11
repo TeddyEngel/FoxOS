@@ -4,13 +4,22 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/isr.h>
 #include <kernel/timer.h>
 #include <kernel/tty.h>
 #include <kernel/keyboard_driver.h>
 
 KernelManager::KernelManager()
 {
+}
+
+GdtManager& KernelManager::getGdtManager()
+{
+    return _gdtManager;
+}
+
+InterruptManager& KernelManager::getInterruptManager()
+{
+    return _interruptManager;
 }
 
 void KernelManager::initialize()
@@ -20,7 +29,6 @@ void KernelManager::initialize()
 
     // Interrupts
     _interruptManager.initialize();
-    isr_manager::initialize();
 
     // Terminal
     tty_manager::initialize();
@@ -43,6 +51,9 @@ void KernelManager::displayBanner()
 void KernelManager::runLoop()
 {
     displayBanner();
+
+    // TODO: Add a test so that calling that should return an interrupt message
+    // asm volatile ("int $0x3");
 
     while (42)
     {
