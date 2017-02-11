@@ -4,7 +4,6 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/gdt.h>
 #include <kernel/idt.h>
 #include <kernel/isr.h>
 #include <kernel/timer.h>
@@ -18,7 +17,7 @@ KernelManager::KernelManager()
 void KernelManager::initialize()
 {
     // Memory
-    gdt_manager::initialize();
+    _gdtManager.initialize();
 
     // Interrupts
     idt_manager::initialize();

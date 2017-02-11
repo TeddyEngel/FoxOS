@@ -1,5 +1,5 @@
-#ifndef _KERNEL_GDT_H
-#define _KERNEL_GDT_H
+#ifndef _KERNEL_GDT_TYPES_H
+#define _KERNEL_GDT_TYPES_H
 
 #include <cstdint>
 
@@ -37,24 +37,4 @@ typedef struct gdt_ptr
     uint32_t base;
 } __attribute__((packed)) gdt_ptr_t;
 
-class gdt_manager
-{
-public:
-    static void initialize();
-
-private:
-    static void set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
-
-private:
-    static gdt_entry_t entries[];
-    static gdt_ptr_t   ptr;
-};
-
-/* This will be a function in start.asm. We use this to properly
-*  reload the new segment registers */
-extern "C"
-{
-    void gdt_flush(uint32_t);
-}
-
-#endif /* _KERNEL_GDT_H */
+#endif /* _KERNEL_GDT_TYPES_H */
