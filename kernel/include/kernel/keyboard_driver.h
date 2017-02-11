@@ -13,8 +13,6 @@
 #define KEYBOARD_SCANCODE_PORT 0x60
 
 #define KEY_UP_DECAL 128
-// #define KEY_LEFT_SHIFT 0x2A
-// #define KEY_SHIFT_UP_FLAG 0xAA
 
 /*These r scan codes of non-displayable keys*/
 #define NIL        -1
@@ -73,7 +71,6 @@ private:
     static uint8_t _status;
     static uint8_t _scancode;
     static bool _shiftPressed;
-    // static uint8_t _shiftPressed;
     static uint8_t _kbdus[];
 };
 
