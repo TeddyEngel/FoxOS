@@ -1,10 +1,10 @@
 #include <kernel/memoryManager.h>
 
-const size_t tty_manager::VGA_WIDTH = 80;
+// const size_t tty_manager::VGA_WIDTH = 80;
 
-uint16_t* tty_manager::_buffer;
+// uint16_t* tty_manager::_buffer;
 
-void memoryManager::initialize(void)
+void memoryManager::initialize()
 {
     // _cursor_row = 0;
     // _cursor_column = 0;
