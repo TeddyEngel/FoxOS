@@ -2,6 +2,7 @@
 #define _KERNEL_KERNEL_MANAGER_H
 
 #include <kernel/GdtManager.h>
+#include <kernel/InterruptManager.h>
 
 class KernelManager
 {
@@ -9,13 +10,14 @@ public:
     KernelManager();
 
     void initialize();
-    void runLoop(); // "main"
+    void runLoop();
 
 private:
     void displayBanner();
 
 private:
     GdtManager _gdtManager;
+    InterruptManager _interruptManager;
 };
 
 #endif /* _KERNEL_KERNEL_MANAGER_H */

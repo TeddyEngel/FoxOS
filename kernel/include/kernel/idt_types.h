@@ -1,9 +1,7 @@
-#ifndef _KERNEL_IDT_H
-#define _KERNEL_IDT_H
+#ifndef _KERNEL_IDT_TYPES_H
+#define _KERNEL_IDT_TYPES_H
 
 #include <cstdint>
-
-#include <kernel/pic.h>
 
 #define IDT_ENTRIES 256
 
@@ -41,28 +39,4 @@ typedef struct idt_ptr
    uint32_t base;                // The address of the first element in our idt_entry_t array.
 } __attribute__((packed)) idt_ptr_t;
 
-class idt_manager
-{
-public:
-    static void initialize();
-    static void enable_interrupts();
-    static void disable_interrupts();
-    static bool are_interrupts_enabled();
-
-private:
-    static void remap_irqs(int offset1, int offset2);
-    static void set_gate(uint8_t, uint32_t, uint16_t, uint8_t);
-    static void set_cpu_gates();
-    static void set_irq_gates();
-    
-private:
-    static idt_entry_t entries[];
-    static idt_ptr_t   ptr;
-};
-
-extern "C"
-{
-    void idt_flush(uint32_t);
-}
-
-#endif /* _KERNEL_IDT_H */
+#endif /* _KERNEL_IDT_TYPES_H */

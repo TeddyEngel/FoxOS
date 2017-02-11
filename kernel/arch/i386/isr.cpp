@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include <kernel/idt.h>
+#include <kernel/idt_types.h>
 
 fct_handler isr_manager::handlers[IDT_ENTRIES] = { 0 };
 

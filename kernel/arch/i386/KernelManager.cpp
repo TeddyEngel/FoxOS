@@ -4,7 +4,6 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/idt.h>
 #include <kernel/isr.h>
 #include <kernel/timer.h>
 #include <kernel/tty.h>
@@ -20,14 +19,14 @@ void KernelManager::initialize()
     _gdtManager.initialize();
 
     // Interrupts
-    idt_manager::initialize();
+    _interruptManager.initialize();
     isr_manager::initialize();
 
     // Terminal
     tty_manager::initialize();
 
     // System clock
-    idt_manager::enable_interrupts();
+    _interruptManager.enableInterrupts();
     timer_manager::initialize(DEFAULT_FREQUENCY);
 
     // Keyboard

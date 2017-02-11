@@ -2,7 +2,8 @@
 
 #include <cstdio>
 
-#include <kernel/idt.h>
+#include <kernel/pic.h>
+#include <kernel/idt_types.h>
 #include <kernel/isr.h>
 
 void irq_handler(registers_t regs)
