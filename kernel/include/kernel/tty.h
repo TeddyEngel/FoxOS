@@ -41,4 +41,4 @@ private:
     static uint16_t* _buffer;
 };
 
-#endif
+#endif /* _KERNEL_TTY_H */
