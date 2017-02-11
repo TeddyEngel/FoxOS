@@ -1,7 +1,7 @@
 #ifndef _KERNEL_MEMORY_MANAGER_H
 #define _KERNEL_MEMORY_MANAGER_H
 
-class memoryManager
+class MemoryManager
 {
 public:
     static void initialize();
