@@ -9,10 +9,12 @@
 
 #include <kernel/registers.h>
 
+class KernelManager;
+
 class TimerManager
 {
 public:
-    TimerManager();
+    TimerManager(KernelManager&);
     void initialize();
     void increaseTicks();
 
@@ -26,6 +28,7 @@ private:
     static const uint32_t FREQUENCY;
 
 private:
+    KernelManager& _kernelManager;
     uint32_t _tick;
 };
 

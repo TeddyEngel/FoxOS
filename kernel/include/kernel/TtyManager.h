@@ -4,10 +4,12 @@
 #include <cstddef>
 #include <cstdint>
 
+class KernelManager;
+
 class TtyManager
 {
 public:
-    TtyManager();
+    TtyManager(KernelManager&);
 
     void initialize();
     void write(const char* data, size_t size);
@@ -36,6 +38,7 @@ private:
     static const uint8_t TAB_WIDTH;
 
 private:
+    KernelManager& _kernelManager;
     size_t _cursor_row;
     size_t _cursor_column;
     uint8_t _color;

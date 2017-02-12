@@ -8,6 +8,8 @@
 KernelManager::KernelManager()
     : _gdtManager(*this)
     , _interruptManager(*this)
+    , _timerManager(*this)
+    , _ttyManager(*this)
 {
 }
 

@@ -4,6 +4,8 @@
 #include <cstring>
 #include <cstdio>
 
+#include <kernel/KernelManager.h>
+
 #include "vga.h"
 
 const size_t TtyManager::VGA_WIDTH = 80;
@@ -11,8 +13,9 @@ const size_t TtyManager::VGA_HEIGHT = 25;
 uint16_t* const TtyManager::VGA_MEMORY = (uint16_t*) 0xB8000;
 const uint8_t TtyManager::TAB_WIDTH = 4;
 
-TtyManager::TtyManager()
-    : _cursor_row(0)
+TtyManager::TtyManager(KernelManager& kernelManager)
+    : _kernelManager(kernelManager)
+    , _cursor_row(0)
     , _cursor_column(0)
     , _color(vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK))
     , _buffer(VGA_MEMORY)

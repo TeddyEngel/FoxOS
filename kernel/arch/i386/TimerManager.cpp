@@ -2,24 +2,25 @@
 
 #include <cstdio>
 
-#include <kernel/KernelManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/irq_types.h>
+#include <kernel/KernelManager.h>
 #include <kernel/pit_types.h>
 
 extern KernelManager kernelManager;
 
 const uint32_t TimerManager::FREQUENCY = 50;
 
-TimerManager::TimerManager()
-    : _tick(0)
+TimerManager::TimerManager(KernelManager& kernelManager)
+    : _kernelManager(kernelManager)
+    , _tick(0)
 {
 }
 
 void TimerManager::initialize()
 {
     // Firstly, register our timer callback.
-    InterruptManager& interruptManager = kernelManager.getInterruptManager();
+    InterruptManager& interruptManager = _kernelManager.getInterruptManager();
     interruptManager.registerHandler(IRQ0, &onTickHook);
 
     // The value we send to the PIT is the value to divide it's input clock
