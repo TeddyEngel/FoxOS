@@ -3,6 +3,7 @@
 
 #include <kernel/GdtManager.h>
 #include <kernel/InterruptManager.h>
+#include <kernel/TtyManager.h>
 
 class KernelManager
 {
@@ -11,6 +12,7 @@ public:
 
     GdtManager& getGdtManager();
     InterruptManager& getInterruptManager();
+    TtyManager& getTtyManager();
 
     void initialize();
     void runLoop();
@@ -21,6 +23,7 @@ private:
 private:
     GdtManager _gdtManager;
     InterruptManager _interruptManager;
+    TtyManager _ttyManager;
 };
 
 #endif /* _KERNEL_KERNEL_MANAGER_H */

@@ -14,7 +14,6 @@
 #include <kernel/KernelManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/irq_types.h>
-#include <kernel/tty.h>
 
 extern KernelManager kernelManager;
 
@@ -168,22 +167,22 @@ void keyboard_driver::on_keypress(registers_t)
         }
         else if (_scancode == LEFT)
         {
-            tty_manager::move_cursor_left();
+            kernelManager.getTtyManager().move_cursor_left();
             return;
         }
         else if (_scancode == RGHT)
         {
-            tty_manager::move_cursor_right();
+            kernelManager.getTtyManager().move_cursor_right();
             return;
         }
         else if (_scancode == UP)
         {
-            tty_manager::move_cursor_up();
+            kernelManager.getTtyManager().move_cursor_up();
             return;
         }
         else if (_scancode == DOWN)
         {
-            tty_manager::move_cursor_down();
+            kernelManager.getTtyManager().move_cursor_down();
             return;
         }
         if (_shiftPressed == true)

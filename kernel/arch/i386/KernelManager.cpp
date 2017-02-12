@@ -5,7 +5,6 @@
 
 #include <kernel/cpu.h>
 #include <kernel/timer.h>
-#include <kernel/tty.h>
 #include <kernel/keyboard_driver.h>
 
 KernelManager::KernelManager()
@@ -22,6 +21,11 @@ InterruptManager& KernelManager::getInterruptManager()
     return _interruptManager;
 }
 
+TtyManager& KernelManager::getTtyManager()
+{
+    return _ttyManager;
+}
+
 void KernelManager::initialize()
 {
     // Memory
@@ -31,7 +35,7 @@ void KernelManager::initialize()
     _interruptManager.initialize();
 
     // Terminal
-    tty_manager::initialize();
+    _ttyManager.initialize();
 
     // System clock
     _interruptManager.enableInterrupts();
