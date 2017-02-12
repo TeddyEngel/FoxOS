@@ -8,6 +8,8 @@
 
 extern KernelManager kernelManager;
 
+const uint32_t timer_manager::FREQUENCY = 50;
+
 uint32_t timer_manager::_tick = 0;
 
 void timer_manager::on_tick(registers_t)
@@ -16,7 +18,7 @@ void timer_manager::on_tick(registers_t)
    // printf("Tick: %d\n", _tick);
 }
 
-void timer_manager::initialize(uint32_t frequency)
+void timer_manager::initialize()
 {
     // Firstly, register our timer callback.
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
@@ -25,7 +27,7 @@ void timer_manager::initialize(uint32_t frequency)
     // The value we send to the PIT is the value to divide it's input clock
     // (1193180 Hz) by, to get our required frequency. Important to note is
     // that the divisor must be small enough to fit into 16-bits.
-    uint32_t divisor = 1193180 / frequency;
+    uint32_t divisor = 1193180 / FREQUENCY;
 
     // Send the command byte.
     outb(PIT_COMMAND_PORT, PIT_REPEATING_MODE);

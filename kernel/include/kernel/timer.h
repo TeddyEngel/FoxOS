@@ -11,15 +11,16 @@
 
 #include <kernel/pit_types.h>
 
-#define DEFAULT_FREQUENCY 50
-
 class timer_manager
 {
 public:
-    static void initialize(uint32_t frequency);
+    static void initialize();
 
 private:
     static void on_tick(registers_t);
+
+private:
+    static const uint32_t FREQUENCY;
 
 private:
     static uint32_t _tick;

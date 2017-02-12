@@ -39,7 +39,7 @@ void KernelManager::initialize()
 
     // System clock
     _interruptManager.enableInterrupts();
-    timer_manager::initialize(DEFAULT_FREQUENCY);
+    timer_manager::initialize();
 
     // Keyboard
     keyboard_driver::initialize();
