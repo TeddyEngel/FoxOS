@@ -22,8 +22,6 @@ void timer_manager::initialize(uint32_t frequency)
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
     interruptManager.registerHandler(IRQ0, &on_tick);
 
-    fct_handler handler = interruptManager.getHandler(IRQ0);
-
     // The value we send to the PIT is the value to divide it's input clock
     // (1193180 Hz) by, to get our required frequency. Important to note is
     // that the divisor must be small enough to fit into 16-bits.
