@@ -20,7 +20,7 @@ void TimerManager::initialize()
 {
     // Firstly, register our timer callback.
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
-    interruptManager.registerHandler(IRQ0, &onTick);
+    interruptManager.registerHandler(IRQ0, &onTickHook);
 
     // The value we send to the PIT is the value to divide it's input clock
     // (1193180 Hz) by, to get our required frequency. Important to note is
@@ -39,14 +39,14 @@ void TimerManager::initialize()
     outb(PIT_DATA_PORT_CHANNEL_0, h);
 } 
 
-void TimerManager::increaseTicks()
+void TimerManager::onTick()
 {
     ++_tick;
     // printf("Tick: %d\n", _tick);
 }
 
-void TimerManager::onTick(registers_t)
+void TimerManager::onTickHook(registers_t)
 {
     TimerManager& timerManager = kernelManager.getTimerManager();
-    timerManager.increaseTicks();
+    timerManager.onTick();
 }

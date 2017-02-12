@@ -17,16 +17,12 @@
 
 extern KernelManager kernelManager;
 
-uint8_t keyboard_driver::_status = 0;
-uint8_t keyboard_driver::_scancode = 0;
-bool keyboard_driver::_shiftPressed = false;
-
 /* KBDUS means US Keyboard Layout. This is a _scancode table
 *  used to layout a standard US keyboard. I have left some
 *  comments in to give you an idea of what key is what, even
 *  though I set it's array index to 0. You can change that to
 *  whatever you want using a macro, if you wish! */
-uint8_t keyboard_driver::_kbdus[256] =
+const uint8_t KeyboardDriver::MAPPING_US[] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
   '9', '0', '-', '=', '\b', /* Backspace */
@@ -110,51 +106,58 @@ uint8_t keyboard_driver::_kbdus[256] =
     0,  /* All other keys are undefined */
 };  
 
-void keyboard_driver::initialize()
+KeyboardDriver::KeyboardDriver()
+    : _status(0)
+    , _scancode(0)
+    , _shiftPressed(false)
+{
+}
+
+void KeyboardDriver::initialize()
 {
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
-    interruptManager.registerHandler(IRQ1, &on_keypress);
+    interruptManager.registerHandler(IRQ1, &onKeypressHook);
 } 
 
-void keyboard_driver::enable()
+void KeyboardDriver::enable()
 {
     int32_t data = inb(0x61);
     outb(0x61, data & 0x7F);
 }
 
-void keyboard_driver::disable()
+void KeyboardDriver::disable()
 {
     int32_t data = inb(0x61);
     outb(0x61, data | 0x80);
 }
 
-void keyboard_driver::restart()
+void KeyboardDriver::restart()
 {    
    disable();
    enable();
 }
 
-uint8_t keyboard_driver::read_status()
+uint8_t KeyboardDriver::readStatus()
 {
     return inb(KEYBOARD_STATUS_PORT);
 }
 
-uint8_t keyboard_driver::read_scancode()
+uint8_t KeyboardDriver::readScancode()
 {
     return inb(KEYBOARD_SCANCODE_PORT);
 }
 
-void keyboard_driver::show_light_if_needed()
+void KeyboardDriver::showLightIfNeeded()
 {
     // TODO: Implement
     // 0xED using the described method, then you send the byte that says which lights are to be on or off. 
     // This byte has the following format: Bit0 is Scroll lock, Bit1 is Num lock, and Bit2 is Caps lock. 
 }
 
-void keyboard_driver::on_keypress(registers_t)
+void KeyboardDriver::onKeypress()
 {
-    _status = read_status();
-    _scancode = read_scancode();
+    _status = readStatus();
+    _scancode = readScancode();
 
     // When the key is down
     if(!(_scancode & 0x80))
@@ -186,8 +189,8 @@ void keyboard_driver::on_keypress(registers_t)
             return;
         }
         if (_shiftPressed == true)
-            _scancode += 128;
-        putchar(_kbdus[_scancode]);
+            _scancode += SHIFT_MODIFIER;
+        putchar(MAPPING_US[_scancode]);
     }
     // When the key is back up
     else
@@ -198,4 +201,10 @@ void keyboard_driver::on_keypress(registers_t)
             return;
         }   
     }
+}
+
+void KeyboardDriver::onKeypressHook(registers_t)
+{
+    KeyboardDriver& keyboardDriver = kernelManager.getKeyboardDriver();
+    keyboardDriver.onKeypress();
 }

@@ -12,6 +12,8 @@
 #define KEYBOARD_STATUS_PORT 0x64
 #define KEYBOARD_SCANCODE_PORT 0x60
 
+#define KEYS_COUNT 256
+#define SHIFT_MODIFIER 128
 #define KEY_UP_DECAL 128
 
 /*These r scan codes of non-displayable keys*/
@@ -52,26 +54,34 @@
 #define SLEP   95
 #define WAKE  99
 
-class keyboard_driver
+class KeyboardDriver
 {
 public:
-    static void initialize();
-    static void enable();
-    static void disable();
-    static void restart();
+    KeyboardDriver();
+
+    void initialize();
+    void enable();
+    void disable();
+    void restart();
+
+    void onKeypress();
 
 private:
-    static uint8_t read_status();
-    static uint8_t read_scancode();
+    uint8_t readStatus();
+    uint8_t readScancode();
 
-    static void show_light_if_needed();
-    static void on_keypress(registers_t);
+    void showLightIfNeeded();
 
 private:
-    static uint8_t _status;
-    static uint8_t _scancode;
-    static bool _shiftPressed;
-    static uint8_t _kbdus[];
+    static void onKeypressHook(registers_t);
+
+private:
+    static const uint8_t MAPPING_US[KEYS_COUNT];
+
+private:
+    uint8_t _status;
+    uint8_t _scancode;
+    bool _shiftPressed;
 };
 
 #endif /* _KERNEL_KEYBOARD_DRIVER_H */

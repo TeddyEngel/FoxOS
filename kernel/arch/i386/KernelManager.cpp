@@ -4,7 +4,6 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/KeyboardDriver.h>
 
 KernelManager::KernelManager()
 {
@@ -30,6 +29,11 @@ TtyManager& KernelManager::getTtyManager()
     return _ttyManager;
 }
 
+KeyboardDriver& KernelManager::getKeyboardDriver()
+{
+    return _keyboardDriver;
+}
+
 void KernelManager::initialize()
 {
     // Memory
@@ -46,7 +50,7 @@ void KernelManager::initialize()
     _timerManager.initialize();
 
     // Keyboard
-    keyboard_driver::initialize();
+    _keyboardDriver.initialize();
 }
 
 void KernelManager::displayBanner()

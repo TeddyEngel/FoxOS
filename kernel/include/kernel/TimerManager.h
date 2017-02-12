@@ -16,9 +16,11 @@ public:
     void initialize();
     void increaseTicks();
 
+    void onTick();
+
 private:
     // TODO: Change to bind / lambdas once I support them
-    static void onTick(registers_t);
+    static void onTickHook(registers_t);
 
 private:
     static const uint32_t FREQUENCY;
