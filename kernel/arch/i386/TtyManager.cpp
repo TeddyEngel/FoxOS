@@ -29,10 +29,10 @@ void TtyManager::write(const char* data, size_t size)
 {
     for (size_t i = 0; i < size; i++)
         putchar(data[i]);
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::write_string(const char* data)
+void TtyManager::writeString(const char* data)
 {
     write(data, strlen(data));
 }
@@ -41,10 +41,10 @@ void TtyManager::clear()
 {
     for (size_t y = 0; y < VGA_HEIGHT; ++y)
         for (size_t x = 0; x < VGA_WIDTH; ++x)
-            put_entry_at(' ', _color, y, x);
+            putEntryAt(' ', _color, y, x);
 }
 
-void TtyManager::move_cursor_left()
+void TtyManager::moveCursorLeft()
 {
     if (_cursor_column == 0 && _cursor_row > 0)
     {
@@ -53,17 +53,15 @@ void TtyManager::move_cursor_left()
     }
     else if (_cursor_column == 0 && _cursor_row == 0)
     {
-        scrollup();
+        scrollUp();
         _cursor_column = VGA_WIDTH - 1;
     }
     else
-    {
         --_cursor_column;
-    }
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::move_cursor_right()
+void TtyManager::moveCursorRight()
 {
     if (_cursor_column == VGA_WIDTH - 1 && _cursor_row < VGA_HEIGHT - 1)
     {
@@ -72,56 +70,54 @@ void TtyManager::move_cursor_right()
     }
     else if (_cursor_column == VGA_WIDTH - 1 && _cursor_row == VGA_HEIGHT - 1)
     {
-        scrolldown();
+        scrollDown();
         _cursor_column = 0;
     }
     else
-    {
         ++_cursor_column;
-    }
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::move_cursor_up()
+void TtyManager::moveCursorUp()
 {
     if (_cursor_row == 0)
-        scrollup();
+        scrollUp();
     else
         --_cursor_row;
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::move_cursor_down()
+void TtyManager::moveCursorDown()
 {
     if (_cursor_row == VGA_HEIGHT - 1)
-        scrolldown();
+        scrollDown();
     else
         ++_cursor_row;
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::set_color(uint8_t color)
+void TtyManager::setColor(uint8_t color)
 {
     _color = color;
 }
 
-void TtyManager::put_entry_at(unsigned char c, uint8_t color, size_t x, size_t y)
+void TtyManager::putEntryAt(unsigned char c, uint8_t color, size_t x, size_t y)
 {
     const size_t index = y * VGA_WIDTH + x;
     _buffer[index] = vga_entry(c, color);
 }
 
-void TtyManager::put_entry_at_cursor(unsigned char c, uint8_t color)
+void TtyManager::putEntryAtCursor(unsigned char c, uint8_t color)
 {
-    put_entry_at(c, color, _cursor_column, _cursor_row);
+    putEntryAt(c, color, _cursor_column, _cursor_row);
 }
 
-void TtyManager::scrollup()
+void TtyManager::scrollUp()
 {
     // TODO: Fill the top line with history line
     // For now we just clear the first line
     for (size_t x = 0; x < VGA_WIDTH; x++)
-        put_entry_at(' ', _color, x, 0);
+        putEntryAt(' ', _color, x, 0);
 
     // Move all lines down
     for (size_t y = VGA_HEIGHT - 1; y >= 1; --y)
@@ -136,7 +132,7 @@ void TtyManager::scrollup()
     }
 }
 
-void TtyManager::scrolldown()
+void TtyManager::scrollDown()
 {
     // Move all lines up
     for (size_t y = 0; y < VGA_HEIGHT - 1; ++y)
@@ -152,7 +148,7 @@ void TtyManager::scrolldown()
 
     // Clear last line
     for (size_t x = 0; x < VGA_WIDTH; x++)
-        put_entry_at(' ', _color, x, (VGA_HEIGHT - 1));
+        putEntryAt(' ', _color, x, (VGA_HEIGHT - 1));
 }
 
 void TtyManager::putchar(char c)
@@ -162,14 +158,14 @@ void TtyManager::putchar(char c)
     // Newline
     if (uc == '\n')
     {
-        move_cursor_newline();
+        moveCursorNewLine();
         return;
     }
     // Backspace
     else if (uc == '\b')
     {
-        move_cursor_left();
-        put_entry_at_cursor(' ', _color);
+        moveCursorLeft();
+        putEntryAtCursor(' ', _color);
         return;
     }
     // Horizontal tab
@@ -178,21 +174,21 @@ void TtyManager::putchar(char c)
         int i = 0;
 
         while (i++ < TAB_WIDTH)
-            move_cursor_right();
+            moveCursorRight();
         return;
     }
     // Carriage return
     else if (uc == '\r')
     {
-        move_cursor_beginline();
+        moveCursorBeginLine();
         return;
     }
 
-    put_entry_at_cursor(uc, _color);
-    move_cursor_right();
+    putEntryAtCursor(uc, _color);
+    moveCursorRight();
 }
 
-void TtyManager::move_physical_cursor(uint8_t column, uint8_t row)
+void TtyManager::movePhysicalCursor(uint8_t column, uint8_t row)
 {
     if (column >= VGA_WIDTH)
         column = VGA_WIDTH - 1;
@@ -205,17 +201,17 @@ void TtyManager::move_physical_cursor(uint8_t column, uint8_t row)
     outb(0x3D5, index);               // Send the low cursor byte.
 }
 
-void TtyManager::move_cursor_newline()
+void TtyManager::moveCursorNewLine()
 {
     if (_cursor_row == VGA_HEIGHT - 1)
-        scrolldown();
+        scrollDown();
     else
         ++_cursor_row;
     _cursor_column = 0;
-    move_physical_cursor(_cursor_column, _cursor_row);
+    movePhysicalCursor(_cursor_column, _cursor_row);
 }
 
-void TtyManager::move_cursor_beginline()
+void TtyManager::moveCursorBeginLine()
 {
     _cursor_column = 0;
 }

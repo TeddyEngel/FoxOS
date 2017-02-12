@@ -167,22 +167,22 @@ void keyboard_driver::on_keypress(registers_t)
         }
         else if (_scancode == LEFT)
         {
-            kernelManager.getTtyManager().move_cursor_left();
+            kernelManager.getTtyManager().moveCursorLeft();
             return;
         }
         else if (_scancode == RGHT)
         {
-            kernelManager.getTtyManager().move_cursor_right();
+            kernelManager.getTtyManager().moveCursorRight();
             return;
         }
         else if (_scancode == UP)
         {
-            kernelManager.getTtyManager().move_cursor_up();
+            kernelManager.getTtyManager().moveCursorUp();
             return;
         }
         else if (_scancode == DOWN)
         {
-            kernelManager.getTtyManager().move_cursor_down();
+            kernelManager.getTtyManager().moveCursorDown();
             return;
         }
         if (_shiftPressed == true)

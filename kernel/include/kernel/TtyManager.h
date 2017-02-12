@@ -11,23 +11,23 @@ public:
 
     void initialize();
     void write(const char* data, size_t size);
-    void write_string(const char* data);
+    void writeString(const char* data);
     void clear();
-    void move_cursor_left();
-    void move_cursor_right();
-    void move_cursor_up();
-    void move_cursor_down();
+    void moveCursorLeft();
+    void moveCursorRight();
+    void moveCursorUp();
+    void moveCursorDown();
 
 private:
-    void set_color(uint8_t color);
-    void put_entry_at(unsigned char c, uint8_t color, size_t x, size_t y);
-    void put_entry_at_cursor(unsigned char c, uint8_t color);
-    void scrollup();
-    void scrolldown();
+    void setColor(uint8_t color);
+    void putEntryAt(unsigned char c, uint8_t color, size_t x, size_t y);
+    void putEntryAtCursor(unsigned char c, uint8_t color);
+    void scrollUp();
+    void scrollDown();
     void putchar(char c);
-    void move_physical_cursor(uint8_t x, uint8_t y);
-    void move_cursor_newline();
-    void move_cursor_beginline();
+    void movePhysicalCursor(uint8_t x, uint8_t y);
+    void moveCursorNewLine();
+    void moveCursorBeginLine();
 
 private:
     static const size_t VGA_WIDTH;
