@@ -7,6 +7,7 @@
 
 KernelManager::KernelManager()
     : _gdtManager(*this)
+    , _memoryManager(*this)
     , _interruptManager(*this)
     , _timerManager(*this)
     , _ttyManager(*this)
@@ -17,6 +18,11 @@ KernelManager::KernelManager()
 GdtManager& KernelManager::getGdtManager()
 {
     return _gdtManager;
+}
+
+MemoryManager& KernelManager::getMemoryManager()
+{
+    return _memoryManager;
 }
 
 InterruptManager& KernelManager::getInterruptManager()
@@ -43,6 +49,7 @@ void KernelManager::initialize()
 {
     // Memory
     _gdtManager.initialize();
+    _memoryManager.initialize();
 
     // Interrupts
     _interruptManager.initialize();

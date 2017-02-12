@@ -2,6 +2,7 @@
 #define _KERNEL_KERNEL_MANAGER_H
 
 #include <kernel/GdtManager.h>
+#include <kernel/MemoryManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/TimerManager.h>
 #include <kernel/KeyboardDriver.h>
@@ -13,6 +14,7 @@ public:
     KernelManager();
 
     GdtManager& getGdtManager();
+    MemoryManager& getMemoryManager();
     InterruptManager& getInterruptManager();
     TimerManager& getTimerManager();
     TtyManager& getTtyManager();
@@ -27,6 +29,7 @@ private:
 
 private:
     GdtManager _gdtManager;
+    MemoryManager _memoryManager;
     InterruptManager _interruptManager;
     TimerManager _timerManager;
     TtyManager _ttyManager;
