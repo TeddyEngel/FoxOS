@@ -7,7 +7,7 @@
 ** Write scancodes translated to some memory area
 */
 
-#include <kernel/keyboard_driver.h>
+#include <kernel/KeyboardDriver.h>
 
 #include <cstdio>
 

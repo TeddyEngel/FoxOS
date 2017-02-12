@@ -4,7 +4,7 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/keyboard_driver.h>
+#include <kernel/KeyboardDriver.h>
 
 KernelManager::KernelManager()
 {
