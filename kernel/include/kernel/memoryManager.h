@@ -1,5 +1,4 @@
-#ifndef _KERNEL_MEMORY_MANAGER_H
-#define _KERNEL_MEMORY_MANAGER_H
+#pragma once
 
 class KernelManager;
 
@@ -13,5 +12,3 @@ public:
 private:
     KernelManager& _kernelManager;
 };
-
-#endif /* _KERNEL_MEMORY_MANAGER_H */

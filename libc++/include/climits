@@ -1,6 +1,3 @@
-#ifndef _CLIMITS
-#define _CLIMITS 1
+#pragma once
 
 #include <limits.h>
-
-#endif

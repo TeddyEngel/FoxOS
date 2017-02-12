@@ -1,5 +1,4 @@
-#ifndef ARCH_I386_VGA_H
-#define ARCH_I386_VGA_H
+#pragma once
 
 #if defined(__cplusplus)
 	#include <cstdint>
@@ -33,5 +32,3 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
 static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
-
-#endif

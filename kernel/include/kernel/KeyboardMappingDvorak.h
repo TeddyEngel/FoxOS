@@ -2,8 +2,7 @@
 ** Keyboard Mapping DVORAK
 */
 
-#ifndef _KERNEL_KEYBOARD_MAPPING_DVORAK_H
-#define _KERNEL_KEYBOARD_MAPPING_DVORAK_H
+#pragma once
 
 #include <cstdint>
 
@@ -91,5 +90,3 @@ static const uint8_t KeyboardMappingDvorak[KEYS_COUNT] = {
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
 };  
-
-#endif /* _KERNEL_KEYBOARD_MAPPING_DVORAK_H */

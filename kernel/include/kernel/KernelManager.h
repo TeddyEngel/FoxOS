@@ -1,5 +1,4 @@
-#ifndef _KERNEL_KERNEL_MANAGER_H
-#define _KERNEL_KERNEL_MANAGER_H
+#pragma once
 
 #include <kernel/GdtManager.h>
 #include <kernel/MemoryManager.h>
@@ -36,5 +35,3 @@ private:
 
     KeyboardDriver _keyboardDriver;
 };
-
-#endif /* _KERNEL_KERNEL_MANAGER_H */

@@ -1,5 +1,4 @@
-#ifndef _KERNEL_CPU_H
-#define _KERNEL_CPU_H
+#pragma once
 
 #include <cstdint>
 
@@ -8,5 +7,3 @@ class cpu_manager
 public:
     static void halt();
 };
-
-#endif /* _KERNEL_CPU_H */

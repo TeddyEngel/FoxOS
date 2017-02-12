@@ -2,8 +2,7 @@
 ** Keyboard driver
 */
 
-#ifndef _KERNEL_KEYBOARD_DRIVER_H
-#define _KERNEL_KEYBOARD_DRIVER_H
+#pragma once
 
 #include <cstdint>
 
@@ -98,5 +97,3 @@ private:
     uint8_t _currentMappingIndex;
     uint8_t _mappings[MAPPING_COUNT][KEYS_COUNT];
 };
-
-#endif /* _KERNEL_KEYBOARD_DRIVER_H */

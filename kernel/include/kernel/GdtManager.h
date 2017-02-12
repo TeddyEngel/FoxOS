@@ -1,5 +1,4 @@
-#ifndef _KERNEL_GDT_MANAGER_H
-#define _KERNEL_GDT_MANAGER_H
+#pragma once
 
 #include <cstdint>
 
@@ -22,5 +21,3 @@ private:
     gdt_entry_t _entries[GDT_ENTRIES];
     gdt_ptr_t   _ptr;
 };
-
-#endif /* _KERNEL_GDT_MANAGER_H */

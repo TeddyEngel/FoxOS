@@ -2,8 +2,7 @@
 ** Keyboard Mapping EN_US
 */
 
-#ifndef _KERNEL_KEYBOARD_MAPPING_EN_US_H
-#define _KERNEL_KEYBOARD_MAPPING_EN_US_H
+#pragma once
 
 #include <cstdint>
 
@@ -96,5 +95,3 @@ static const uint8_t KeyboardMappingEnUs[KEYS_COUNT] = {
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
 };  
-
-#endif /* _KERNEL_KEYBOARD_MAPPING_EN_US_H */

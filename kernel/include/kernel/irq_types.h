@@ -1,5 +1,4 @@
-#ifndef _KERNEL_IRQ_TYPES_H
-#define _KERNEL_IRQ_TYPES_H
+#pragma once
 
 #define IRQ0 32
 #define IRQ1 33
@@ -17,5 +16,3 @@
 #define IRQ13 45
 #define IRQ14 46
 #define IRQ15 47
-
-#endif /* _KERNEL_IRQ_TYPES_H */

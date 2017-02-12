@@ -1,5 +1,4 @@
-#ifndef _KERNEL_GDT_TYPES_H
-#define _KERNEL_GDT_TYPES_H
+#pragma once
 
 #include <cstdint>
 
@@ -36,5 +35,3 @@ typedef struct gdt_ptr
     uint16_t limit;
     uint32_t base;
 } __attribute__((packed)) gdt_ptr_t;
-
-#endif /* _KERNEL_GDT_TYPES_H */

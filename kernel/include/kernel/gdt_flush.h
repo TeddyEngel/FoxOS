@@ -1,5 +1,4 @@
-#ifndef _KERNEL_GDT_FLUSH_H
-#define _KERNEL_GDT_FLUSH_H
+#pragma once
 
 #include <cstdint>
 
@@ -9,5 +8,3 @@ extern "C"
 {
     void gdt_flush(uint32_t);
 }
-
-#endif /* _KERNEL_GDT_FLUSH_H */

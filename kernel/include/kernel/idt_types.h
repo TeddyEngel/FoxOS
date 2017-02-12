@@ -1,5 +1,4 @@
-#ifndef _KERNEL_IDT_TYPES_H
-#define _KERNEL_IDT_TYPES_H
+#pragma once
 
 #include <cstdint>
 
@@ -45,5 +44,3 @@ typedef struct idt_ptr
 // For IRQs, to ease confusion, use the #defines above as the
 // first parameter.
 typedef void (*fct_handler)(registers_t);
-
-#endif /* _KERNEL_IDT_TYPES_H */

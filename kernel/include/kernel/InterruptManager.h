@@ -1,5 +1,4 @@
-#ifndef _KERNEL_IDT_H
-#define _KERNEL_IDT_H
+#pragma once
 
 #include <cstdint>
 
@@ -35,5 +34,3 @@ private:
     idt_ptr_t   _ptr;
     fct_handler _handlers[IDT_ENTRIES];
 };
-
-#endif /* _KERNEL_IDT_H */

@@ -1,5 +1,4 @@
-#ifndef _KERNEL_PIC_H
-#define _KERNEL_PIC_H
+#pragma once
 
 #define PIC_MASTER    0x20    /* IO base address for master PIC */
 #define PIC_SLAVE    0xA0    /* IO base address for slave PIC */
@@ -24,5 +23,3 @@
 #define ICW4_BUF_SLAVE  0x08    // Buffered mode/slave
 #define ICW4_BUF_MASTER 0x0C    // Buffered mode/master
 #define ICW4_SFNM 0x10    // Special fully nested (not)
-
-#endif /* _KERNEL_PIC_H */

@@ -1,5 +1,4 @@
-#ifndef _KERNEL_IRQ_HANDLERS_H
-#define _KERNEL_IRQ_HANDLERS_H
+#pragma once
 
 // These extern directives let us access the addresses of our ASM ISR handlers.
 extern "C"
@@ -21,5 +20,3 @@ extern "C"
     void irq14();
     void irq15();
 }
-
-#endif /* _KERNEL_IRQ_HANDLERS_H */

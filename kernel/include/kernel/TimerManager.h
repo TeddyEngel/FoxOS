@@ -2,8 +2,7 @@
 ** Timer to handle the system clock / IRQ0
 */
 
-#ifndef _KERNEL_TIMER_MANAGER_H
-#define _KERNEL_TIMER_MANAGER_H
+#pragma once
 
 #include <cstdint>
 
@@ -31,5 +30,3 @@ private:
     KernelManager& _kernelManager;
     uint32_t _tick;
 };
-
-#endif /* _KERNEL_TIMER_MANAGER_H */

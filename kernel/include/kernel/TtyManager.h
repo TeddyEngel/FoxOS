@@ -1,5 +1,4 @@
-#ifndef _KERNEL_TTY_MANAGER_H
-#define _KERNEL_TTY_MANAGER_H
+#pragma once
 
 #include <cstddef>
 #include <cstdint>
@@ -44,5 +43,3 @@ private:
     uint8_t _color;
     uint16_t* _buffer;
 };
-
-#endif /* _KERNEL_TTY_MANAGER_H */
