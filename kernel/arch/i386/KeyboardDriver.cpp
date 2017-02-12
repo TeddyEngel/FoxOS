@@ -3,8 +3,8 @@
 **
 ** TODO:
 ** Handle caps lock
-** Add dvorak mapping
 ** Write scancodes translated to some memory area
+** Once I have heap mem, add mappings dynamically
 */
 
 #include <kernel/KeyboardDriver.h>
@@ -17,101 +17,22 @@
 
 extern KernelManager kernelManager;
 
-/* KBDUS means US Keyboard Layout. This is a _scancode table
-*  used to layout a standard US keyboard. I have left some
-*  comments in to give you an idea of what key is what, even
-*  though I set it's array index to 0. You can change that to
-*  whatever you want using a macro, if you wish! */
-const uint8_t KeyboardDriver::MAPPING_US[] =
-{
-    0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
-  '9', '0', '-', '=', '\b', /* Backspace */
-  '\t',         /* Tab */
-  'q', 'w', 'e', 'r',   /* 19 */
-  't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', /* Enter key */
-    0,          /* 29   - Control */
-  'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', /* 39 */
- '\'', '`',   0,        /* Left shift */
- '\\', 'z', 'x', 'c', 'v', 'b', 'n',            /* 49 */
-  'm', ',', '.', '/',   0,              /* Right shift */
-  '*',
-    0,  /* Alt */
-  ' ',  /* Space bar */
-    0,  /* Caps lock */
-    0,  /* 59 - F1 key ... > */
-    0,   0,   0,   0,   0,   0,   0,   0,
-    0,  /* < ... F10 */
-    0,  /* 69 - Num lock*/
-    0,  /* Scroll Lock */
-    0,  /* Home key */
-    0,  /* Up Arrow */
-    0,  /* Page Up */
-  '-',
-    0,  /* Left Arrow */
-    0,
-    0,  /* Right Arrow */
-  '+',
-    0,  /* 79 - End key*/
-    0,  /* Down Arrow */
-    0,  /* Page Down */
-    0,  /* Insert Key */
-    0,  /* Delete Key */
-    0,   0,   0,
-    0,  /* F11 Key */
-    0,  /* F12 Key */
-    0,  /* All other keys are undefined */
-
-    /* Buffer keys */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-    /* End of buffer keys */
-
-    0, 0, '!', '@', '#', '$', '%', '^', '&', '*', '(',  /* 9 */
-  ')', '_', '+', '\b', /* Backspace */
-  '\t',         /* Tab */
-  'Q', 'W', 'E', 'R',   /* 19 */
-  'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n', /* Enter key */
-    0,          /* 29   - Control */
-  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', /* 39 */
- '\"', '~',   0,        /* Left shift */
- '|', 'Z', 'X', 'C', 'V', 'B', 'N',            /* 49 */
-  'M', '<', '>', '?',   0,              /* Right shift */
-  '*',
-    0,  /* Alt */
-  ' ',  /* Space bar */
-    0,  /* Caps lock */
-    0,  /* 59 - F1 key ... > */
-    0,   0,   0,   0,   0,   0,   0,   0,
-    0,  /* < ... F10 */
-    0,  /* 69 - Num lock*/
-    0,  /* Scroll Lock */
-    0,  /* Home key */
-    0,  /* Up Arrow */
-    0,  /* Page Up */
-  '-',
-    0,  /* Left Arrow */
-    0,
-    0,  /* Right Arrow */
-  '+',
-    0,  /* 79 - End key*/
-    0,  /* Down Arrow */
-    0,  /* Page Down */
-    0,  /* Insert Key */
-    0,  /* Delete Key */
-    0,   0,   0,
-    0,  /* F11 Key */
-    0,  /* F12 Key */
-    0,  /* All other keys are undefined */
-};  
+// Keyboard mappings
+#include <kernel/KeyboardMappingEnUs.h>
+extern const uint8_t KeyboardMappingEnUs[KEYS_COUNT];
+#include <kernel/KeyboardMappingDvorak.h>
+extern const uint8_t KeyboardMappingDvorak[KEYS_COUNT];
 
 KeyboardDriver::KeyboardDriver(KernelManager& kernelManager)
     : _kernelManager(kernelManager)
     , _status(0)
     , _scancode(0)
     , _shiftPressed(false)
+    , _currentMappingIndex(0)
 {
+    registerMapping(MAPPING_EN_US, KeyboardMappingEnUs);
+    registerMapping(MAPPING_DVORAK, KeyboardMappingDvorak);
+    setActiveMapping(MAPPING_DVORAK); // Hardcoded for now
 }
 
 void KeyboardDriver::initialize()
@@ -136,6 +57,21 @@ void KeyboardDriver::restart()
 {    
    disable();
    enable();
+}
+
+void KeyboardDriver::registerMapping(uint8_t index, const uint8_t mapping[KEYS_COUNT])
+{
+    if (index > MAPPING_COUNT)
+        return;
+    for (int i = 0; i < KEYS_COUNT; ++i)
+        _mappings[index][i] = mapping[i];
+}
+
+void KeyboardDriver::setActiveMapping(uint8_t index)
+{
+    if (index > MAPPING_COUNT)
+        return;
+    _currentMappingIndex = index;
 }
 
 uint8_t KeyboardDriver::readStatus()
@@ -191,7 +127,7 @@ void KeyboardDriver::onKeypress()
         }
         if (_shiftPressed == true)
             _scancode += SHIFT_MODIFIER;
-        putchar(MAPPING_US[_scancode]);
+        putchar(_mappings[_currentMappingIndex][_scancode]);
     }
     // When the key is back up
     else

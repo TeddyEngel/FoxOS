@@ -8,13 +8,13 @@
 #include <cstdint>
 
 #include <kernel/registers.h>
+#include <kernel/KeyboardConstants.h>
 
 class KernelManager;
 
 #define KEYBOARD_STATUS_PORT 0x64
 #define KEYBOARD_SCANCODE_PORT 0x60
 
-#define KEYS_COUNT 256
 #define SHIFT_MODIFIER 128
 #define KEY_UP_DECAL 128
 
@@ -56,6 +56,13 @@ class KernelManager;
 #define SLEP   95
 #define WAKE  99
 
+/*
+** Mappings
+*/
+#define MAPPING_COUNT 2
+#define MAPPING_EN_US 0
+#define MAPPING_DVORAK 1
+
 class KeyboardDriver
 {
 public:
@@ -65,6 +72,9 @@ public:
     void enable();
     void disable();
     void restart();
+    
+    void registerMapping(uint8_t index, const uint8_t mapping[KEYS_COUNT]);
+    void setActiveMapping(uint8_t index);
 
     void onKeypress();
 
@@ -78,13 +88,15 @@ private:
     static void onKeypressHook(registers_t);
 
 private:
-    static const uint8_t MAPPING_US[KEYS_COUNT];
+    // static const uint8_t MAPPING_US[KEYS_COUNT];
 
 private:
     KernelManager& _kernelManager;
     uint8_t _status;
     uint8_t _scancode;
     bool _shiftPressed;
+    uint8_t _currentMappingIndex;
+    uint8_t _mappings[MAPPING_COUNT][KEYS_COUNT];
 };
 
 #endif /* _KERNEL_KEYBOARD_DRIVER_H */
