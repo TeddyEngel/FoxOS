@@ -9,5 +9,6 @@ cstdio/putchar.libk++.o: cstdio/putchar.cpp include/cstdio \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/registers.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/idt_flush.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/isr_handlers.h \
+ /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/TimerManager.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/TtyManager.h \
  include/cstddef

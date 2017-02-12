@@ -1,28 +1,26 @@
-#include <kernel/timer.h>
+#include <kernel/TimerManager.h>
 
 #include <cstdio>
 
 #include <kernel/KernelManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/irq_types.h>
+#include <kernel/pit_types.h>
 
 extern KernelManager kernelManager;
 
-const uint32_t timer_manager::FREQUENCY = 50;
+const uint32_t TimerManager::FREQUENCY = 50;
 
-uint32_t timer_manager::_tick = 0;
-
-void timer_manager::on_tick(registers_t)
+TimerManager::TimerManager()
+    : _tick(0)
 {
-   ++_tick;
-   // printf("Tick: %d\n", _tick);
 }
 
-void timer_manager::initialize()
+void TimerManager::initialize()
 {
     // Firstly, register our timer callback.
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
-    interruptManager.registerHandler(IRQ0, &on_tick);
+    interruptManager.registerHandler(IRQ0, &onTick);
 
     // The value we send to the PIT is the value to divide it's input clock
     // (1193180 Hz) by, to get our required frequency. Important to note is
@@ -40,3 +38,15 @@ void timer_manager::initialize()
     outb(PIT_DATA_PORT_CHANNEL_0, l);
     outb(PIT_DATA_PORT_CHANNEL_0, h);
 } 
+
+void TimerManager::increaseTicks()
+{
+    ++_tick;
+    // printf("Tick: %d\n", _tick);
+}
+
+void TimerManager::onTick(registers_t)
+{
+    TimerManager& timerManager = kernelManager.getTimerManager();
+    timerManager.increaseTicks();
+}

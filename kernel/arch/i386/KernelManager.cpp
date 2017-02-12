@@ -4,7 +4,6 @@
 #include <cstdio>
 
 #include <kernel/cpu.h>
-#include <kernel/timer.h>
 #include <kernel/keyboard_driver.h>
 
 KernelManager::KernelManager()
@@ -19,6 +18,11 @@ GdtManager& KernelManager::getGdtManager()
 InterruptManager& KernelManager::getInterruptManager()
 {
     return _interruptManager;
+}
+
+TimerManager& KernelManager::getTimerManager()
+{
+    return _timerManager;
 }
 
 TtyManager& KernelManager::getTtyManager()
@@ -39,7 +43,7 @@ void KernelManager::initialize()
 
     // System clock
     _interruptManager.enableInterrupts();
-    timer_manager::initialize();
+    _timerManager.initialize();
 
     // Keyboard
     keyboard_driver::initialize();
@@ -60,7 +64,5 @@ void KernelManager::runLoop()
     // asm volatile ("int $0x3");
 
     while (42)
-    {
         cpu_manager::halt();
-    }   
 }
