@@ -3,21 +3,23 @@
 #include <cstdio>
 #include <cstring>
 
-#include <kernel/pic.h>
 #include <kernel/irq_handlers.h>
+#include <kernel/pic.h>
+#include <kernel/KernelManager.h>
 
-InterruptManager::InterruptManager()
+InterruptManager::InterruptManager(KernelManager& kernelManager)
+  : _kernelManager(kernelManager)
 {
   for (int i = 0; i < IDT_ENTRIES; ++i)
-    handlers[i] = 0;
+    _handlers[i] = 0;
 }
 
 void InterruptManager::initialize()
 {
-  ptr.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
-  ptr.base  = (uint32_t)&entries;
+  _ptr.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
+  _ptr.base  = (uint32_t)&_entries;
 
-  memset(&entries, 0, sizeof(idt_entry_t) * IDT_ENTRIES);
+  memset(&_entries, 0, sizeof(idt_entry_t) * IDT_ENTRIES);
 
   remapIrqs(PIC_MASTER, PIC_MASTER + PIC_MASTER_IRQ_ENTRIES);
 
@@ -25,7 +27,7 @@ void InterruptManager::initialize()
 
   setIrqGates();
 
-  idt_flush((uint32_t)&ptr);
+  idt_flush((uint32_t)&_ptr);
 }
 
 void InterruptManager::enableInterrupts()
@@ -49,17 +51,17 @@ bool InterruptManager::areInterruptsEnabled()
 
 bool InterruptManager::hasHandler(uint8_t n)
 {
-    return handlers[n] != 0;
+    return _handlers[n] != 0;
 }
 
 fct_handler InterruptManager::getHandler(uint8_t n)
 {
-    return handlers[n];
+    return _handlers[n];
 }
 
 void InterruptManager::registerHandler(uint8_t n, fct_handler handler)
 {
-    handlers[n] = handler;
+    _handlers[n] = handler;
 }
 
 /*
@@ -99,13 +101,13 @@ void InterruptManager::remapIrqs(int32_t offset1, int32_t offset2)
 
 void InterruptManager::setGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
-  entries[num].base_lo = base & 0xFFFF;
-  entries[num].base_hi = (base >> 16) & 0xFFFF;
+  _entries[num].base_lo = base & 0xFFFF;
+  _entries[num].base_hi = (base >> 16) & 0xFFFF;
 
-  entries[num].sel     = sel;
-  entries[num].always0 = 0;
+  _entries[num].sel     = sel;
+  _entries[num].always0 = 0;
 
-  entries[num].flags   = flags;
+  _entries[num].flags   = flags;
 }
 
 void InterruptManager::setCpuGates()

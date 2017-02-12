@@ -7,10 +7,12 @@
 #include <kernel/idt_flush.h>
 #include <kernel/isr_handlers.h>
 
+class KernelManager;
+
 class InterruptManager
 {
 public:
-    InterruptManager();
+    InterruptManager(KernelManager&);
     void initialize();
 
     void enableInterrupts();
@@ -28,9 +30,10 @@ private:
     void setIrqGates();
 
 private:
-    idt_entry_t entries[IDT_ENTRIES];
-    idt_ptr_t   ptr;
-    fct_handler handlers[IDT_ENTRIES];
+    KernelManager& _kernelManager;
+    idt_entry_t _entries[IDT_ENTRIES];
+    idt_ptr_t   _ptr;
+    fct_handler _handlers[IDT_ENTRIES];
 };
 
 #endif /* _KERNEL_IDT_H */

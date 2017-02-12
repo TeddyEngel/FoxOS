@@ -7,6 +7,7 @@
 
 KernelManager::KernelManager()
     : _gdtManager(*this)
+    , _interruptManager(*this)
 {
 }
 
