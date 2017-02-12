@@ -106,8 +106,9 @@ const uint8_t KeyboardDriver::MAPPING_US[] =
     0,  /* All other keys are undefined */
 };  
 
-KeyboardDriver::KeyboardDriver()
-    : _status(0)
+KeyboardDriver::KeyboardDriver(KernelManager& kernelManager)
+    : _kernelManager(kernelManager)
+    , _status(0)
     , _scancode(0)
     , _shiftPressed(false)
 {
@@ -115,7 +116,7 @@ KeyboardDriver::KeyboardDriver()
 
 void KeyboardDriver::initialize()
 {
-    InterruptManager& interruptManager = kernelManager.getInterruptManager();
+    InterruptManager& interruptManager = _kernelManager.getInterruptManager();
     interruptManager.registerHandler(IRQ1, &onKeypressHook);
 } 
 

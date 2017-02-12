@@ -10,6 +10,7 @@ KernelManager::KernelManager()
     , _interruptManager(*this)
     , _timerManager(*this)
     , _ttyManager(*this)
+    , _keyboardDriver(*this)
 {
 }
 

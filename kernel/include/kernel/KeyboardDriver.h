@@ -9,6 +9,8 @@
 
 #include <kernel/registers.h>
 
+class KernelManager;
+
 #define KEYBOARD_STATUS_PORT 0x64
 #define KEYBOARD_SCANCODE_PORT 0x60
 
@@ -57,7 +59,7 @@
 class KeyboardDriver
 {
 public:
-    KeyboardDriver();
+    KeyboardDriver(KernelManager&);
 
     void initialize();
     void enable();
@@ -79,6 +81,7 @@ private:
     static const uint8_t MAPPING_US[KEYS_COUNT];
 
 private:
+    KernelManager& _kernelManager;
     uint8_t _status;
     uint8_t _scancode;
     bool _shiftPressed;
