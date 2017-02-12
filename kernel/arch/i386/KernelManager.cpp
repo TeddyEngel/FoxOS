@@ -6,6 +6,7 @@
 #include <kernel/cpu.h>
 
 KernelManager::KernelManager()
+    : _gdtManager(*this)
 {
 }
 

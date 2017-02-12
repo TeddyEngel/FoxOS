@@ -1,6 +1,9 @@
 #include <kernel/GdtManager.h>
 
-GdtManager::GdtManager()
+#include <kernel/KernelManager.h>
+
+GdtManager::GdtManager(KernelManager& kernelManager)
+    : _kernelManager(kernelManager)
 {
 }
 
@@ -12,8 +15,8 @@ GdtManager::GdtManager()
 void GdtManager::initialize()
 {
     // Setup the GDT pointer and limit
-    ptr.limit = (sizeof(gdt_entry_t) * GDT_ENTRIES) - 1;
-    ptr.base = (uint32_t)&entries;
+    _ptr.limit = (sizeof(gdt_entry_t) * GDT_ENTRIES) - 1;
+    _ptr.base = (uint32_t)&_entries;
 
     // Our NULL descriptor
     setGate(0, 0, 0, 0, 0);
@@ -41,7 +44,7 @@ void GdtManager::initialize()
     // setGate(4, 0, 0xFFFFFFFF, GDT_FLAG_SEGMENT | GDT_FLAG_32_BIT | GDT_FLAG_DATASEG | GDT_FLAG_4K | GDT_FLAG_PRESENT | GDT_FLAG_RING3);
 
     /* Flush out the old GDT and install the new changes! */
-    gdt_flush((uint32_t)&ptr);
+    gdt_flush((uint32_t)&_ptr);
 }
 
 /* Setup a descriptor in the Global Descriptor Table */
@@ -51,15 +54,15 @@ void GdtManager::setGate(int32_t num, uint32_t base, uint32_t limit, uint8_t acc
         return;
 
     /* Setup the descriptor base address */
-    entries[num].base_low = (base & 0xFFFF);
-    entries[num].base_middle = (base >> 16) & 0xFF;
-    entries[num].base_high = (base >> 24) & 0xFF;
+    _entries[num].base_low = (base & 0xFFFF);
+    _entries[num].base_middle = (base >> 16) & 0xFF;
+    _entries[num].base_high = (base >> 24) & 0xFF;
 
     /* Setup the descriptor limits */
-    entries[num].limit_low = (limit & 0xFFFF);
-    entries[num].granularity = ((limit >> 16) & 0x0F);
+    _entries[num].limit_low = (limit & 0xFFFF);
+    _entries[num].granularity = ((limit >> 16) & 0x0F);
 
     /* Finally, set up the granularity and access flags */
-    entries[num].granularity |= (gran & 0xF0);
-    entries[num].access = access;
+    _entries[num].granularity |= (gran & 0xF0);
+    _entries[num].access = access;
 }
