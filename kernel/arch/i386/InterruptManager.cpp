@@ -4,7 +4,7 @@
 #include <cstring>
 
 #include <kernel/pic.h>
-#include <kernel/irq.h>
+#include <kernel/irq_handlers.h>
 
 InterruptManager::InterruptManager()
 {

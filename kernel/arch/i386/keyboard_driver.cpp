@@ -13,7 +13,7 @@
 
 #include <kernel/KernelManager.h>
 #include <kernel/InterruptManager.h>
-#include <kernel/irq.h>
+#include <kernel/irq_types.h>
 #include <kernel/tty.h>
 
 extern KernelManager kernelManager;

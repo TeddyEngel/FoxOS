@@ -1,4 +1,4 @@
-#include <kernel/irq.h>
+#include <kernel/irq_handler.h>
 
 #include <cstdio>
 
