@@ -84,9 +84,6 @@ void KernelManager::runLoop()
 
     // TODO: Add a test so that calling that should return an interrupt message
     // asm volatile ("int $0x3");
-
-    while (42)
-        _cpuManager.halt();
 }
 
 void KernelManager::panic(const char* message)
