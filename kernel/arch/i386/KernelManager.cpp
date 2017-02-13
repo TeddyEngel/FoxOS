@@ -49,15 +49,16 @@ KeyboardDriver& KernelManager::getKeyboardDriver()
     return _keyboardDriver;
 }
 
-extern uint32_t placement_address;
 void KernelManager::initialize()
 {
-    // Memory
+    // Gdt
     _gdtManager.initialize();
-    _memoryManager.initialize();
 
     // Interrupts
     _interruptManager.initialize();
+
+    // Memory
+    _memoryManager.initialize();
 
     // Terminal
     _ttyManager.initialize();
