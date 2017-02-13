@@ -57,6 +57,9 @@ _start:
     ; in assembly as languages such as C cannot function without a stack.
     mov esp, stack_top
  
+    ; Start by disabling interrupts
+    cli
+
     ; This is a good place to initialize crucial processor state before the
     ; high-level kernel is entered. It's best to minimize the early
     ; environment where crucial features are offline. Note that the
@@ -91,7 +94,7 @@ _start:
     ;    Since they are disabled, this will lock up the computer.
     ; 3) Jump to the hlt instruction if it ever wakes up due to a
     ;    non-maskable interrupt occurring or due to system management mode.
-    cli
+    
 .hang:  hlt
     jmp .hang
 .end:
