@@ -1,6 +1,9 @@
 #include <memory>
 
-uint32_t placement_address = 0x0;
+#include <cstddef>
+
+extern uint32_t end;
+uint32_t placement_address = (uint32_t)&end;
 
 uint32_t kmalloc_int(uint32_t sz, bool align, uint32_t* physicalAddress)
 {

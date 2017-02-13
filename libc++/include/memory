@@ -3,10 +3,12 @@
 
 #include <cstdint>
 
+extern "C" {
 uint32_t kmalloc_int(uint32_t sz, bool align, uint32_t* physicalAddress);
 uint32_t kmalloc_a(uint32_t sz);  // page aligned.
 uint32_t kmalloc_p(uint32_t sz, uint32_t* physicalAddress); // returns a physical address.
 uint32_t kmalloc_ap(uint32_t sz, uint32_t* physicalAddress); // page aligned and returns a physical address.
 uint32_t kmalloc(uint32_t sz); // vanilla (normal). 
+}
 
 #endif /* _MEMORY */
