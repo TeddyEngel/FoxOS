@@ -1,2 +1,2 @@
 cstring/memcpy.libk++.o: cstring/memcpy.cpp include/cstring \
- include/cstddef
+ include/cstddef include/cstdint

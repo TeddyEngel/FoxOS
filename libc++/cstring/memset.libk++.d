@@ -1,2 +1,2 @@
 cstring/memset.libk++.o: cstring/memset.cpp include/cstring \
- include/cstddef
+ include/cstddef include/cstdint
