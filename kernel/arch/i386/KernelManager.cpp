@@ -82,3 +82,11 @@ void KernelManager::runLoop()
     while (42)
         cpu_manager::halt();
 }
+
+void KernelManager::panic(const char* message)
+{
+    puts(message);
+
+    while (42)
+        ;
+}

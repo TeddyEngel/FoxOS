@@ -24,6 +24,8 @@ public:
     void initialize();
     void runLoop();
 
+    void panic(const char* message);
+
 private:
     void displayBanner();
 
