@@ -28,7 +28,7 @@ void MemoryManager::initialize()
 
    // Let's make a page directory.
    _kernelDirectory = (page_directory_t*)kmalloc_a(sizeof(page_directory_t));
-   // memset(_kernelDirectory, 0, sizeof(page_directory_t));
+   memset(_kernelDirectory, 0, sizeof(page_directory_t));
    _currentDirectory = _kernelDirectory;
 
    // We need to identity map (phys addr = virt addr) from
