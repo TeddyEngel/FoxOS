@@ -89,6 +89,8 @@ void KernelManager::runLoop()
 
 void KernelManager::panic(const char* message)
 {
+    _interruptManager.disableInterrupts();
+
     printf("KERNEL PANIC, message: %s\n", message);
 
     while (42)
