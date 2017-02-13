@@ -89,7 +89,7 @@ void KernelManager::runLoop()
 
 void KernelManager::panic(const char* message)
 {
-    puts(message);
+    printf("KERNEL PANIC, message: %s\n", message);
 
     while (42)
         ;
