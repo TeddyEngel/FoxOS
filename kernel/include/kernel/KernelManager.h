@@ -1,6 +1,7 @@
 #ifndef _KERNEL_KERNEL_MANAGER_H
 #define _KERNEL_KERNEL_MANAGER_H
 
+#include <kernel/CpuManager.h>
 #include <kernel/GdtManager.h>
 #include <kernel/MemoryManager.h>
 #include <kernel/InterruptManager.h>
@@ -13,6 +14,7 @@ class KernelManager
 public:
     KernelManager();
 
+    CpuManager& getCpuManager();
     GdtManager& getGdtManager();
     MemoryManager& getMemoryManager();
     InterruptManager& getInterruptManager();
@@ -30,6 +32,7 @@ private:
     void displayBanner();
 
 private:
+    CpuManager _cpuManager;
     GdtManager _gdtManager;
     MemoryManager _memoryManager;
     InterruptManager _interruptManager;

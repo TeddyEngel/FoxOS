@@ -3,16 +3,20 @@
 #include <cstring>
 #include <cstdio>
 
-#include <kernel/cpu.h>
-
 KernelManager::KernelManager()
-    : _gdtManager(*this)
+    : _cpuManager(*this)
+    , _gdtManager(*this)
     , _memoryManager(*this)
     , _interruptManager(*this)
     , _timerManager(*this)
     , _ttyManager(*this)
     , _keyboardDriver(*this)
 {
+}
+
+CpuManager& KernelManager::getCpuManager()
+{
+    return _cpuManager;
 }
 
 GdtManager& KernelManager::getGdtManager()
@@ -80,7 +84,7 @@ void KernelManager::runLoop()
     // asm volatile ("int $0x3");
 
     while (42)
-        cpu_manager::halt();
+        _cpuManager.halt();
 }
 
 void KernelManager::panic(const char* message)
