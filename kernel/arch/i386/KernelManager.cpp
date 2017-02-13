@@ -49,6 +49,7 @@ KeyboardDriver& KernelManager::getKeyboardDriver()
     return _keyboardDriver;
 }
 
+extern uint32_t placement_address;
 void KernelManager::initialize()
 {
     // Memory

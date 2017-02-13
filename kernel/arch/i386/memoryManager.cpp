@@ -1,6 +1,7 @@
 #include <kernel/MemoryManager.h>
 
 #include <cstring>
+#include <cstdio>
 #include <memory>
 
 #include <kernel/KernelManager.h>
@@ -46,22 +47,42 @@ void MemoryManager::initialize()
        allocFrame(getPage(i, 1, _kernelDirectory), 0, 0);
        i += 0x1000;
    }
-   */
+*/
+   allocFrame(getPage(0, 1, _kernelDirectory), 0, 0);
+    // i += 0x1000;
    // Before we enable paging, we must register our page fault handler.
    _kernelManager.getInterruptManager().registerHandler(14, onPageFaultHook);
 
    // Now, enable paging!
-   switchPageDirectory(_kernelDirectory);
+   // switchPageDirectory(_kernelDirectory);
 }
 
-void MemoryManager::switchPageDirectory(page_directory_t*)
+void MemoryManager::switchPageDirectory(page_directory_t* dir)
 {
+    _currentDirectory = dir;
+    asm volatile("mov %0, %%cr3":: "r"(&dir->tablesPhysical));
+    uint32_t cr0;
+    asm volatile("mov %%cr0, %0": "=r"(cr0));
+    cr0 |= 0x80000000; // Enable paging!
+    asm volatile("mov %0, %%cr0":: "r"(cr0));
 }
 
-page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t*)
+page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t* dir)
 {
-    (void)address;
-    (void)make;
+    // Turn the address into an index.
+    address /= 0x1000;
+    // Find the page table containing this address.
+    uint32_t table_idx = address / 1024;
+    if (dir->tables[table_idx]) // If this table is already assigned
+       return &dir->tables[table_idx]->pages[address%1024];
+    else if(make)
+    {
+       uint32_t tmp;
+       dir->tables[table_idx] = (page_table_t*)kmalloc_ap(sizeof(page_table_t), &tmp);
+       memset(dir->tables[table_idx], 0, 0x1000);
+       dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
+       return &dir->tables[table_idx]->pages[address%1024];
+    }
     return NULL;
 }
 
@@ -100,7 +121,9 @@ uint32_t MemoryManager::testFrame(uint32_t frameAddress)
 
 uint32_t MemoryManager::firstFrame()
 {
+    return 0;
    uint32_t i, j;
+   // TODO: FIX BUG HERE
    for (i = 0; i < INDEX_FROM_BIT(_nframes); i++)
    {
        if (_frames[i] != 0xFFFFFFFF) // nothing free, exit early.
@@ -125,6 +148,7 @@ void MemoryManager::allocFrame(page_t* page, int isKernel, int isWriteable)
    else
    {
        uint32_t idx = firstFrame(); // idx is now the index of the first free frame.
+       /*
        if (idx == (uint32_t)-1)
            _kernelManager.panic("No free frames!");
        setFrame(idx * 0x1000); // this frame is now ours!
@@ -132,6 +156,7 @@ void MemoryManager::allocFrame(page_t* page, int isKernel, int isWriteable)
        page->rw = isWriteable ? 1 : 0; // Should the page be writeable?
        page->user = isKernel ? 0 : 1; // Should the page be user-mode?
        page->frame = idx;
+       */
    }
 }
 
