@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#define PHYSICAL_MEMORY_SIZE 0x1000000 // 16MB, replace later
+#define PAGE_SIZE 4096
 #define PAGES_PER_TABLE 1024
 #define PAGE_TABLES_PER_DIRECTORY 1024
 
