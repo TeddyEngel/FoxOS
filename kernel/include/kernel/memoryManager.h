@@ -4,6 +4,8 @@
 #include <kernel/PageTypes.h>
 #include <kernel/registers.h>
 
+#include <kernel/bitset.h>
+
 class KernelManager;
 
 class MemoryManager
@@ -36,7 +38,21 @@ public:
     void onPageFault(registers_t regs); 
 
 private:
+    // Set a bit in the frames bitset
+    void setFrame(uint32_t frameAddr);
+    // Clear a bit in the frames bitset
+    void clearFrame(uint32_t frameAddr);
+    // Test if a bit is set.
+    uint32_t testFrame(uint32_t frameAddr);
+    // Find the first free frames
+    uint32_t firstFrame();
+
+private:
     KernelManager& _kernelManager;
+
+    // Bitset of frames
+    uint32_t *_frames;
+    uint32_t _nframes;
 };
 
 #endif /* _KERNEL_MEMORY_MANAGER_H */

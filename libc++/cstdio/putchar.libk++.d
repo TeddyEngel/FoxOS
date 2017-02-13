@@ -7,6 +7,7 @@ cstdio/putchar.libk++.o: cstdio/putchar.cpp include/cstdio \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/MemoryManager.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/PageTypes.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/registers.h \
+ /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/bitset.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/InterruptManager.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/idt_types.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/idt_flush.h \
