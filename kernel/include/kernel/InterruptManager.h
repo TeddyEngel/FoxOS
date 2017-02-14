@@ -12,8 +12,11 @@ class KernelManager;
 class InterruptManager
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     InterruptManager(KernelManager&);
-    void initialize();
+    int initialize();
 
     void enableInterrupts();
     void disableInterrupts();

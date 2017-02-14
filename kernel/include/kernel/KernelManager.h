@@ -1,6 +1,7 @@
 #ifndef _KERNEL_KERNEL_MANAGER_H
 #define _KERNEL_KERNEL_MANAGER_H
 
+#include <kernel/kernel_types.h>
 #include <kernel/CpuManager.h>
 #include <kernel/GdtManager.h>
 #include <kernel/MemoryManager.h>
@@ -24,8 +25,13 @@ public:
     KeyboardDriver& getKeyboardDriver();
 
     void initialize();
+    #ifdef TEST_MODE
+    void runTests();
+    #endif
     void runLoop();
 
+    void reportStepOk(const char* stepMessage, const char* stepName);
+    void reportStepFailed(const char* stepMessage, const char* stepName);
     void panic(const char* message);
 
 private:

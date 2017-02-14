@@ -14,13 +14,16 @@ class KernelManager;
 class MemoryManager
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     MemoryManager(KernelManager&);
 
     /**
       Sets up the environment, page directories etc and
       enables paging.
     **/
-    void initialize();
+    int initialize();
 
     /**
       Causes the specified page directory to be loaded into the

@@ -9,6 +9,7 @@
 
 extern KernelManager kernelManager;
 
+const char* TimerManager::SERVICE_NAME = "Timer";
 const uint32_t TimerManager::FREQUENCY = 50;
 
 TimerManager::TimerManager(KernelManager& kernelManager)
@@ -17,7 +18,7 @@ TimerManager::TimerManager(KernelManager& kernelManager)
 {
 }
 
-void TimerManager::initialize()
+int TimerManager::initialize()
 {
     // Firstly, register our timer callback.
     InterruptManager& interruptManager = _kernelManager.getInterruptManager();
@@ -38,6 +39,8 @@ void TimerManager::initialize()
     // Send the frequency divisor.
     outb(PIT_DATA_PORT_CHANNEL_0, l);
     outb(PIT_DATA_PORT_CHANNEL_0, h);
+
+    return 0;
 } 
 
 void TimerManager::onTick()

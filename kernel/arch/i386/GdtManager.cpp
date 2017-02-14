@@ -2,6 +2,8 @@
 
 #include <kernel/KernelManager.h>
 
+const char* GdtManager::SERVICE_NAME = "GDT";
+
 GdtManager::GdtManager(KernelManager& kernelManager)
     : _kernelManager(kernelManager)
 {
@@ -12,7 +14,7 @@ GdtManager::GdtManager(KernelManager& kernelManager)
 *  finally call gdt_flush() in our assembler file in order
 *  to tell the processor where the new GDT is and update the
 *  new segment registers */
-void GdtManager::initialize()
+int GdtManager::initialize()
 {
     // Setup the GDT pointer and limit
     _ptr.limit = (sizeof(gdt_entry_t) * GDT_ENTRIES) - 1;
@@ -45,6 +47,8 @@ void GdtManager::initialize()
 
     /* Flush out the old GDT and install the new changes! */
     gdt_flush((uint32_t)&_ptr);
+
+    return 0;
 }
 
 /* Setup a descriptor in the Global Descriptor Table */

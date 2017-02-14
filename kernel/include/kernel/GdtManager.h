@@ -11,8 +11,11 @@ class KernelManager;
 class GdtManager
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     GdtManager(KernelManager&);
-    void initialize();
+    int initialize();
 
 private:
     void setGate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);

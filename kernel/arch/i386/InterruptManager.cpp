@@ -7,6 +7,8 @@
 #include <kernel/pic.h>
 #include <kernel/KernelManager.h>
 
+const char* InterruptManager::SERVICE_NAME = "Interrupts";
+
 InterruptManager::InterruptManager(KernelManager& kernelManager)
   : _kernelManager(kernelManager)
 {
@@ -14,7 +16,7 @@ InterruptManager::InterruptManager(KernelManager& kernelManager)
     _handlers[i] = 0;
 }
 
-void InterruptManager::initialize()
+int InterruptManager::initialize()
 {
   _ptr.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
   _ptr.base  = (uint32_t)&_entries;
@@ -28,6 +30,8 @@ void InterruptManager::initialize()
   setIrqGates();
 
   idt_flush((uint32_t)&_ptr);
+
+  return 0;
 }
 
 void InterruptManager::enableInterrupts()

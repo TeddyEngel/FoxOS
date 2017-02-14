@@ -66,9 +66,12 @@ class KernelManager;
 class KeyboardDriver
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     KeyboardDriver(KernelManager&);
 
-    void initialize();
+    int initialize();
     void enable();
     void disable();
     void restart();
@@ -86,9 +89,6 @@ private:
 
 private:
     static void onKeypressHook(registers_t);
-
-private:
-    // static const uint8_t MAPPING_US[KEYS_COUNT];
 
 private:
     KernelManager& _kernelManager;

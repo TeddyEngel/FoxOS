@@ -1,6 +1,7 @@
 cstdio/putchar.libk++.o: cstdio/putchar.cpp include/cstdio \
  include/cstdint \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/KernelManager.h \
+ /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/kernel_types.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/CpuManager.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/GdtManager.h \
  /Users/dayteed/Dropbox/Private/Projects/OS/foxOS/sysroot/usr/include/kernel/gdt_types.h \

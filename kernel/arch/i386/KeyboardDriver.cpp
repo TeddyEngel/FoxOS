@@ -23,6 +23,8 @@ extern const uint8_t KeyboardMappingEnUs[KEYS_COUNT];
 #include <kernel/KeyboardMappingDvorak.h>
 extern const uint8_t KeyboardMappingDvorak[KEYS_COUNT];
 
+const char* KeyboardDriver::SERVICE_NAME = "Keyboard Driver";
+
 KeyboardDriver::KeyboardDriver(KernelManager& kernelManager)
     : _kernelManager(kernelManager)
     , _status(0)
@@ -35,10 +37,11 @@ KeyboardDriver::KeyboardDriver(KernelManager& kernelManager)
     setActiveMapping(MAPPING_DVORAK); // Hardcoded for now
 }
 
-void KeyboardDriver::initialize()
+int KeyboardDriver::initialize()
 {
     InterruptManager& interruptManager = _kernelManager.getInterruptManager();
     interruptManager.registerHandler(IRQ1, &onKeypressHook);
+    return 0;
 } 
 
 void KeyboardDriver::enable()

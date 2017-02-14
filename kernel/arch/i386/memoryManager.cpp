@@ -9,6 +9,8 @@
 extern KernelManager kernelManager;
 extern uint32_t placement_address;
 
+const char* MemoryManager::SERVICE_NAME = "Paging";
+
 MemoryManager::MemoryManager(KernelManager& kernelManager)
     : _kernelManager(kernelManager)
     , _kernelDirectory(NULL)
@@ -17,7 +19,7 @@ MemoryManager::MemoryManager(KernelManager& kernelManager)
 
 }
 
-void MemoryManager::initialize()
+int MemoryManager::initialize()
 {
     // The size of physical memory. For the moment we
    // assume it is 16MB big.
@@ -53,6 +55,8 @@ void MemoryManager::initialize()
 
    // Now, enable paging!
    switchPageDirectory(_kernelDirectory);
+
+   return 0;
 }
 
 void MemoryManager::switchPageDirectory(page_directory_t* dir)

@@ -14,8 +14,11 @@ class KernelManager;
 class TimerManager
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     TimerManager(KernelManager&);
-    void initialize();
+    int initialize();
     void increaseTicks();
 
     void onTick();

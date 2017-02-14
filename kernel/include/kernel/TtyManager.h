@@ -9,12 +9,18 @@ class KernelManager;
 class TtyManager
 {
 public:
+    static const char* SERVICE_NAME;
+    
+public:
     TtyManager(KernelManager&);
 
-    void initialize();
+    int initialize();
     void write(const char* data, size_t size);
     void writeString(const char* data);
     void clear();
+    void setTextColorLightGrey();
+    void setTextColorRed();
+    void setTextColorGreen();
     void moveCursorLeft();
     void moveCursorRight();
     void moveCursorUp();

@@ -8,6 +8,7 @@
 
 #include "vga.h"
 
+const char* TtyManager::SERVICE_NAME = "TTY";
 const size_t TtyManager::VGA_WIDTH = 80;
 const size_t TtyManager::VGA_HEIGHT = 25;
 uint16_t* const TtyManager::VGA_MEMORY = (uint16_t*) 0xB8000;
@@ -23,9 +24,10 @@ TtyManager::TtyManager(KernelManager& kernelManager)
 
 }
 
-void TtyManager::initialize(void)
+int TtyManager::initialize(void)
 {
     clear();
+    return 0;
 }
 
 void TtyManager::write(const char* data, size_t size)
@@ -45,6 +47,21 @@ void TtyManager::clear()
     for (size_t y = 0; y < VGA_HEIGHT; ++y)
         for (size_t x = 0; x < VGA_WIDTH; ++x)
             putEntryAt(' ', _color, y, x);
+}
+
+void TtyManager::setTextColorLightGrey()
+{
+    setColor(vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK));
+}
+
+void TtyManager::setTextColorRed()
+{
+    setColor(vga_entry_color(VGA_COLOR_RED, VGA_COLOR_BLACK));
+}
+
+void TtyManager::setTextColorGreen()
+{
+    setColor(vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLACK));
 }
 
 void TtyManager::moveCursorLeft()
