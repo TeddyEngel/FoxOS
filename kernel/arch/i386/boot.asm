@@ -72,8 +72,8 @@ _start:
     extern _init
     call _init
 
-    extern kernel_early
-    call kernel_early
+    extern kernelEarly
+    call kernelEarly
  
     ; Enter the high-level kernel. The ABI requires the stack is 16-byte
     ; aligned at the time of the call instruction (which afterwards pushes
@@ -81,8 +81,8 @@ _start:
     ; aligned above and we've since pushed a multiple of 16 bytes to the
     ; stack since (pushed 0 bytes so far) and the alignment is thus
     ; preserved and the call is well defined.
-    extern kernel_main
-    call kernel_main
+    extern kernelMain
+    call kernelMain
  
     ; If the system has nothing more to do, put the computer into an
     ; infinite loop. To do that:
@@ -94,7 +94,7 @@ _start:
     ;    Since they are disabled, this will lock up the computer.
     ; 3) Jump to the hlt instruction if it ever wakes up due to a
     ;    non-maskable interrupt occurring or due to system management mode.
-    
+
 .hang:  hlt
     jmp .hang
 .end:

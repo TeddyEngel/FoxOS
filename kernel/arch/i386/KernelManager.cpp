@@ -51,6 +51,9 @@ KeyboardDriver& KernelManager::getKeyboardDriver()
 
 void KernelManager::initialize()
 {
+    // Terminal
+    _ttyManager.initialize();
+    
     // Gdt
     _gdtManager.initialize();
 
@@ -59,9 +62,6 @@ void KernelManager::initialize()
 
     // Memory
     _memoryManager.initialize();
-
-    // Terminal
-    _ttyManager.initialize();
 
     // System clock
     _interruptManager.enableInterrupts();

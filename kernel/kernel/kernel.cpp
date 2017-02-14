@@ -1,15 +1,15 @@
+#include <kernel/kernel.h>
+
 #include <kernel/KernelManager.h>
 
 KernelManager kernelManager;
 
-extern "C"
-void kernel_early()
+void kernelEarly()
 {
     kernelManager.initialize();
 }
 
-extern "C"
-void kernel_main(void)
+void kernelMain()
 {
     kernelManager.runLoop();
 }
