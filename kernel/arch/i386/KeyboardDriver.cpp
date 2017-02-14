@@ -40,6 +40,9 @@ int KeyboardDriver::initialize()
 {
     InterruptManager& interruptManager = _kernelManager.getInterruptManager();
     interruptManager.registerHandler(IRQ1, &onKeypressHook);
+
+    if (!interruptManager.hasHandler(IRQ1))
+        return 1;
     return 0;
 } 
 

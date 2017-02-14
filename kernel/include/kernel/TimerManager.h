@@ -1,5 +1,6 @@
 /*
 ** Timer to handle the system clock / IRQ0
+** TODO: Add test for default tick value
 */
 
 #ifndef _KERNEL_TIMER_MANAGER_H
@@ -28,6 +29,7 @@ private:
     static void onTickHook(registers_t);
 
 private:
+    static const uint32_t MAX_FREQUENCY;
     static const uint32_t FREQUENCY;
 
 private:

@@ -24,7 +24,7 @@ TtyManager::TtyManager(KernelManager& kernelManager)
 
 }
 
-int TtyManager::initialize(void)
+int TtyManager::initialize()
 {
     clear();
     return 0;
