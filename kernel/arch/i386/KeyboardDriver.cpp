@@ -1,10 +1,9 @@
 /*
 ** "Simple" keyboard driver
 **
-** TODO:
-** Handle caps lock
-** Write scancodes translated to some memory area
-** Once I have heap mem, add mappings dynamically
+** TODO: Handle caps lock
+** TODO: Write scancodes translated to some memory area
+** TODO: Once I have heap mem, add mappings dynamically
 */
 
 #include <kernel/KeyboardDriver.h>
