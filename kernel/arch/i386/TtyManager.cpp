@@ -135,9 +135,6 @@ void TtyManager::putEntryAtCursor(unsigned char c, uint8_t color)
 void TtyManager::scrollUp()
 {
     // TODO: Fill the top line with history line
-    // For now we just clear the first line
-    for (size_t x = 0; x < VGA_WIDTH; x++)
-        putEntryAt(' ', _color, x, 0);
 
     // Move all lines down
     for (size_t y = VGA_HEIGHT - 1; y >= 1; --y)
@@ -150,6 +147,10 @@ void TtyManager::scrollUp()
             _buffer[index] = _buffer[index_previous_line];
         }
     }
+
+    // For now we just clear the first line
+    for (size_t x = 0; x < VGA_WIDTH; x++)
+        putEntryAt(' ', _color, x, 0);
 }
 
 void TtyManager::scrollDown()
