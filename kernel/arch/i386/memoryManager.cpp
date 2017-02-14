@@ -50,13 +50,17 @@ int MemoryManager::initialize()
        i += PAGE_SIZE;
    }
 
-   // Before we enable paging, we must register our page fault handler.
-   _kernelManager.getInterruptManager().registerHandler(14, onPageFaultHook);
+  // Before we enable paging, we must register our page fault handler.
+  InterruptManager& interruptManager = _kernelManager.getInterruptManager();
+  interruptManager.registerHandler(14, &onPageFaultHook);
+ 
+  if (!interruptManager.hasHandler(14))
+    return 1;
 
-   // Now, enable paging!
-   switchPageDirectory(_kernelDirectory);
+  // Now, enable paging!
+  switchPageDirectory(_kernelDirectory);
 
-   return 0;
+  return 0;
 }
 
 void MemoryManager::switchPageDirectory(page_directory_t* dir)
