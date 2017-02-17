@@ -92,13 +92,13 @@ page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t* dir
     return NULL;
 }
 
-void MemoryManager::onPageFault()
+void MemoryManager::onPageFault(const registers_t& regs)
 {
 }
 
-void MemoryManager::onPageFaultHook(registers_t)
+void MemoryManager::onPageFaultHook(const registers_t& regs)
 {
-    kernelManager.getMemoryManager().onPageFault();
+    kernelManager.getMemoryManager().onPageFault(regs);
 }
 
 void MemoryManager::setFrame(uint32_t frameAddress)

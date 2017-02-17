@@ -88,7 +88,7 @@ private:
     void showLightIfNeeded();
 
 private:
-    static void onKeypressHook(registers_t);
+    static void onKeypressHook(const registers_t&);
 
 private:
     KernelManager& _kernelManager;

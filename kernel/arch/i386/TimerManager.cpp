@@ -54,7 +54,7 @@ void TimerManager::onTick()
     // printf("Tick: %d\n", _tick);
 }
 
-void TimerManager::onTickHook(registers_t)
+void TimerManager::onTickHook(const registers_t&)
 {
     TimerManager& timerManager = kernelManager.getTimerManager();
     timerManager.onTick();

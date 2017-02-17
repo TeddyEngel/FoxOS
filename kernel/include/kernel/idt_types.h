@@ -44,6 +44,6 @@ typedef struct idt_ptr
 // Enables registration of callbacks for interrupts or IRQs.
 // For IRQs, to ease confusion, use the #defines above as the
 // first parameter.
-typedef void (*fct_handler)(registers_t);
+typedef void (*fct_handler)(const registers_t&);
 
 #endif /* _KERNEL_IDT_TYPES_H */

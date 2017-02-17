@@ -145,7 +145,7 @@ void KeyboardDriver::onKeypress()
     }
 }
 
-void KeyboardDriver::onKeypressHook(registers_t)
+void KeyboardDriver::onKeypressHook(const registers_t&)
 {
     KeyboardDriver& keyboardDriver = kernelManager.getKeyboardDriver();
     keyboardDriver.onKeypress();

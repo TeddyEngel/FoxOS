@@ -26,7 +26,7 @@ public:
 
 private:
     // TODO: Change to bind / lambdas once I support them
-    static void onTickHook(registers_t);
+    static void onTickHook(const registers_t&);
 
 private:
     static const uint32_t MAX_FREQUENCY;

@@ -41,10 +41,10 @@ public:
     /**
       Handler for page faults.
     **/
-    void onPageFault();
+    void onPageFault(const registers_t&);
 
 private:
-    static void onPageFaultHook(registers_t);
+    static void onPageFaultHook(const registers_t&);
 
     // Set a bit in the frames bitset
     void setFrame(uint32_t frameAddress);
