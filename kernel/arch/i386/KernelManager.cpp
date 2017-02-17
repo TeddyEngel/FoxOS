@@ -106,6 +106,11 @@ void KernelManager::runTests()
     // TODO: Add a test so that calling that should return an interrupt message
     // asm volatile ("int $0x3");
 
+    // TODO: Add a test that triggers a page fault
+    // uint32_t *ptr = (uint32_t*)0xA0000000;
+    // uint32_t do_page_fault = *ptr;
+    // asm volatile ("int $0xE");
+
     // _ttyManager.setTextColorGreen();
     // printf("TESTS SUCCESSFULL\n");
     // _ttyManager.setTextColorLightGrey();
@@ -141,4 +146,5 @@ void KernelManager::panic(const char* message)
 
     _ttyManager.setTextColorRed();
     printf("KERNEL PANIC, message: %s\n", message);
+    _cpuManager.halt();
 }
