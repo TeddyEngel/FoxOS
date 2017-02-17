@@ -94,6 +94,26 @@ page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t* dir
 
 void MemoryManager::onPageFault(const registers_t& regs)
 {
+  // A page fault has occurred.
+  // The faulting address is stored in the CR2 register.
+  uint32_t faultAddress;
+  asm volatile("mov %%cr2, %0" : "=r" (faultAddress));
+
+  // The error code gives us details of what happened.
+  int32_t present = !(regs.err_code & 0x1); // Page not present
+  int32_t rw = regs.err_code & 0x2;           // Write operation?
+  int32_t us = regs.err_code & 0x4;           // Processor was in user-mode?
+  int32_t reserved = regs.err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
+  int32_t id = regs.err_code & 0x10;          // Caused by an instruction fetch?
+
+  // Output an error message.
+  printf("Page fault! (%s%s%s%s) at 0x%d\n", 
+    present ? "present " : "", 
+    rw ? "read-only " : "", 
+    us ? "user-mode " : "",
+    reserved ? "reserved" : "",
+    faultAddress);
+  _kernelManager.panic("Page fault");
 }
 
 void MemoryManager::onPageFaultHook(const registers_t& regs)
