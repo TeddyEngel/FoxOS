@@ -8,7 +8,7 @@
 class MemoryBlockFooter
 {    
 public:
-    uint32_t _magic;     // Magic number, same as in header_t.
+    uint32_t _magic;     // Magic number, same as in header.
     MemoryBlockHeader* _header; // Pointer to the block header.
 };
 
