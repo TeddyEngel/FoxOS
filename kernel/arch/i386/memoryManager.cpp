@@ -106,6 +106,8 @@ void MemoryManager::onPageFault(const registers_t& regs)
   int32_t reserved = regs.err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
   int32_t id = regs.err_code & 0x10;          // Caused by an instruction fetch?
 
+  (void)id; // Not used for now
+
   // Output an error message.
   printf("Page fault! (%s%s%s%s) at 0x%d\n", 
     present ? "present " : "", 
@@ -164,6 +166,7 @@ uint32_t MemoryManager::firstFrame()
            }
        }
    }
+   return 0;
 } 
 
 void MemoryManager::allocFrame(page_t* page, int isKernel, int isWriteable)
