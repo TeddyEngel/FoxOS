@@ -111,6 +111,15 @@ void KernelManager::runTests()
     // uint32_t do_page_fault = *ptr;
     // asm volatile ("int $0xE");
 
+    // TODO: Add a test that allocates, deallocates, allocates, and checks that the mem address is same as original
+
+    // TODO:
+    // int a = kmalloc(8); // Allocate 8 bytes: returns 0xC0080000 for sake of argument
+    // int b = kmalloc(8); // Allocate another 8 bytes: returns 0xC0080008.
+    // kfree(a);           // Release a
+    // kfree(b);           // Release b
+    // int c = kmalloc(16);// What will this allocation return? Same as original
+
     // _ttyManager.setTextColorGreen();
     // printf("TESTS SUCCESSFULL\n");
     // _ttyManager.setTextColorLightGrey();
