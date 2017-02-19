@@ -43,6 +43,7 @@ cstring/memmove.o \
 cstring/memset.o \
 cstring/strlen.o \
 memory/kmalloc.o \
+collection/ordered_array.o \
 # stdlib/abort.o \
 
 HOSTEDOBJS=\
