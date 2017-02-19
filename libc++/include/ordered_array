@@ -15,7 +15,7 @@ typedef void* type_t;
   A predicate should return nonzero if the first argument is less than the second. Else
   it should return zero.
 **/
-typedef int8_t (*lessthan_predicate_t)(type_t, type_t);
+typedef int8_t (*fctLessThan)(type_t, type_t);
 
 /**
   A standard less than predicate.
@@ -25,8 +25,12 @@ int8_t standard_lessthan_predicate(type_t a, type_t b);
 class ordered_array
 {
 public:
-  ordered_array(uint32_t max_size, lessthan_predicate_t less_than);
-  ordered_array(void *addr, uint32_t max_size, lessthan_predicate_t less_than);
+  ordered_array(uint32_t max_size, fctLessThan);
+  ordered_array(void *addr, uint32_t max_size, fctLessThan);
+
+  // We use those methods in a kernel context, when dynamic memory isn't available yet
+  // static ordered_array create(uint32_t max_size, fctLessThan);
+  // static ordered_array place(void *addr, uint32_t max_size, fctLessThan);
 
   ~ordered_array();
 
@@ -40,10 +44,10 @@ public:
   void erase(uint32_t i);
 
 public:
-  type_t *array;
-  uint32_t size;
-  uint32_t max_size;
-  lessthan_predicate_t less_than;
+  type_t* _array;
+  uint32_t _size;
+  uint32_t _maxSize;
+  fctLessThan _lessThan;
 };
 
 #endif // ORDERED_ARRAY
