@@ -14,7 +14,7 @@ INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_libc++ -Iinclude
+CPPFLAGS:=$(CPPFLAGS) -D__is_libcpp -Iinclude
 LIBK++_CFLAGS:=$(CFLAGS)
 LIBK++_CPPFLAGS:=$(CPPFLAGS) -D__is_libkpp
 
