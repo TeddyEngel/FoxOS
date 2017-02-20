@@ -11,11 +11,6 @@
 **/
 typedef int8_t (*fctLessThan)(type_t, type_t);
 
-/**
-  A standard less than predicate.
-**/
-int8_t standard_lessthan_predicate(type_t a, type_t b);
-
 class ordered_array
 {
 public:

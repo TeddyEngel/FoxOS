@@ -1,0 +1,11 @@
+#ifndef PREDICATES
+#define PREDICATES
+
+#include <cstdint>
+
+extern "C"
+{
+    int8_t less_than(type_t, type_t);
+}
+
+#endif // PREDICATES

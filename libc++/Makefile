@@ -44,6 +44,7 @@ cstring/memset.o \
 cstring/strlen.o \
 memory/kmalloc.o \
 collection/ordered_array.o \
+predicates/less_than.o \
 # stdlib/abort.o \
 
 HOSTEDOBJS=\

@@ -3,10 +3,6 @@
 #include <cstring>
 #include <memory>
 
-int8_t standard_lessthan_predicate(type_t a, type_t b)
-{
-  return (a < b) ? 1 : 0;
-}
 
 ordered_array::ordered_array(uint32_t maxSize, fctLessThan lessThan)
   : _array((void**)kmalloc(maxSize * sizeof(type_t))) // TODO: Test, Might create issues, used to be a void*
