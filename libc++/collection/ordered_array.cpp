@@ -65,7 +65,7 @@ void ordered_array::insert(type_t item)
        _array[iterator] = item;
        while (iterator < _size)
        {
-           iterator++;
+           ++iterator;
            type_t tmp2 = _array[iterator];
            _array[iterator] = tmp;
            tmp = tmp2;
