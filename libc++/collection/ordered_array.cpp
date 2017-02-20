@@ -3,6 +3,7 @@
 #include <cstring>
 #include <memory>
 
+// TODO: Implement as a btree
 
 ordered_array::ordered_array(uint32_t maxSize, fctLessThan lessThan)
   : _array((void**)kmalloc(maxSize * sizeof(type_t))) // TODO: Test, Might create issues, used to be a void*
