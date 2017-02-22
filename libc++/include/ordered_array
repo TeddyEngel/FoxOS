@@ -1,0 +1,42 @@
+// ordered_array -- Interface for creating, inserting and deleting from ordered arrays.
+
+#ifndef ORDERED_ARRAY
+#define ORDERED_ARRAY
+
+#include <cstdint>
+
+/**
+  A predicate should return nonzero if the first argument is less than the second. Else
+  it should return zero.
+**/
+typedef int8_t (*fctLessThan)(type_t, type_t);
+
+class ordered_array
+{
+public:
+  ordered_array(uint32_t max_size, fctLessThan);
+  ordered_array(void *addr, uint32_t max_size, fctLessThan);
+
+  // We use those methods in a kernel context, when dynamic memory isn't available yet
+  // static ordered_array create(uint32_t max_size, fctLessThan);
+  // static ordered_array place(void *addr, uint32_t max_size, fctLessThan);
+
+  ~ordered_array();
+
+  // Add an item into the array
+  void insert(type_t item);
+
+  // Lookup the item at index i.
+  type_t lookup(uint32_t i);
+
+  // Deletes the item at location i from the array.
+  void erase(uint32_t i);
+
+public:
+  type_t* _array;
+  uint32_t _size;
+  uint32_t _maxSize;
+  fctLessThan _lessThan;
+};
+
+#endif // ORDERED_ARRAY

@@ -31,7 +31,7 @@ align 4
 section .bss
 align 4
 stack_bottom:
-resb 32768 ; 32 KiB
+resb 65536 ; 64 KiB
 stack_top:
  
 ; The linker script specifies _start as the entry point to the kernel and the
@@ -57,6 +57,9 @@ _start:
     ; in assembly as languages such as C cannot function without a stack.
     mov esp, stack_top
  
+    ; Start by disabling interrupts
+    cli
+
     ; This is a good place to initialize crucial processor state before the
     ; high-level kernel is entered. It's best to minimize the early
     ; environment where crucial features are offline. Note that the
@@ -69,8 +72,8 @@ _start:
     extern _init
     call _init
 
-    extern kernel_early
-    call kernel_early
+    extern kernelEarly
+    call kernelEarly
  
     ; Enter the high-level kernel. The ABI requires the stack is 16-byte
     ; aligned at the time of the call instruction (which afterwards pushes
@@ -78,8 +81,8 @@ _start:
     ; aligned above and we've since pushed a multiple of 16 bytes to the
     ; stack since (pushed 0 bytes so far) and the alignment is thus
     ; preserved and the call is well defined.
-    extern kernel_main
-    call kernel_main
+    extern kernelMain
+    call kernelMain
  
     ; If the system has nothing more to do, put the computer into an
     ; infinite loop. To do that:
@@ -91,7 +94,7 @@ _start:
     ;    Since they are disabled, this will lock up the computer.
     ; 3) Jump to the hlt instruction if it ever wakes up due to a
     ;    non-maskable interrupt occurring or due to system management mode.
-    cli
+
 .hang:  hlt
     jmp .hang
 .end:

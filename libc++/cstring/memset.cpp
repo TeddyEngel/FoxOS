@@ -1,9 +1,11 @@
 #include <cstring>
 
-void* memset(void* bufptr, int value, size_t size)
+#include <cstdint>
+
+void* memset(void* dest, uint8_t value, uint32_t size)
 {
-    unsigned char* buf = (unsigned char*) bufptr;
-    for (size_t i = 0; i < size; ++i)
-        buf[i] = (unsigned char) value;
-    return bufptr;
+    uint8_t *temp = (uint8_t *)dest;
+    for ( ; size != 0; size--) 
+        *temp++ = value;
+    return dest;
 }

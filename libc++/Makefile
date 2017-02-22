@@ -14,7 +14,7 @@ INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_libc++ -Iinclude
+CPPFLAGS:=$(CPPFLAGS) -D__is_libcpp -Iinclude
 LIBK++_CFLAGS:=$(CFLAGS)
 LIBK++_CPPFLAGS:=$(CPPFLAGS) -D__is_libkpp
 
@@ -42,6 +42,9 @@ cstring/memcpy.o \
 cstring/memmove.o \
 cstring/memset.o \
 cstring/strlen.o \
+memory/kmalloc.o \
+collection/ordered_array.o \
+predicates/less_than.o \
 # stdlib/abort.o \
 
 HOSTEDOBJS=\
