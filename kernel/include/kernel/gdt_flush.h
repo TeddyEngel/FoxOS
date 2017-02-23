@@ -7,7 +7,7 @@
 *  reload the new segment registers */
 extern "C"
 {
-    void gdt_flush(uint32_t);
+    void gdt_flush();
 }
 
 #endif /* _KERNEL_GDT_FLUSH_H */

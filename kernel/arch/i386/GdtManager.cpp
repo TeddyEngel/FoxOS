@@ -46,12 +46,31 @@ int GdtManager::initialize()
     // setGate(4, 0, 0xFFFFFFFF, GDT_FLAG_SEGMENT | GDT_FLAG_32_BIT | GDT_FLAG_DATASEG | GDT_FLAG_4K | GDT_FLAG_PRESENT | GDT_FLAG_RING3);
 
     /* Flush out the old GDT and install the new changes! */
-    gdt_flush((uint32_t)&_ptr);
+    nativeLoadGdt();
+    // TODO: Make the following work with inline assembly :/
+    /*
+    __asm__ __volatile__ (
+        "movl $0x10, %%eax\n"
+        "movl %%eax, %%ds\n"
+        "movl %%eax, %%es\n"
+        "movl %%eax, %%fs\n"
+        "movl %%eax, %%gs\n"
+        "movl %%eax, %%ss\n"
+    :
+    :
+    :"%eax"
+    );
+    */
+    gdt_flush();
 
     return 0;
 }
 
-/* Setup a descriptor in the Global Descriptor Table */
+inline void GdtManager::nativeLoadGdt()
+{
+    __asm__ __volatile__("lgdt %[in]"::[in]"m" (_ptr));
+}
+
 void GdtManager::setGate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
 {
     if(num >= GDT_ENTRIES)

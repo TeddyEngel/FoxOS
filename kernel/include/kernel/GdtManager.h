@@ -18,6 +18,9 @@ public:
     int initialize();
 
 private:
+    // Executes the lgdt instruction using _ptr
+    inline void nativeLoadGdt();
+    // Setup a descriptor in the Global Descriptor Table
     void setGate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);
 
 private:
