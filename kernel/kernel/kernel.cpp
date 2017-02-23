@@ -1,3 +1,8 @@
+/*
+** General todo section
+** User class
+*/
+
 #include <kernel/kernel.h>
 
 #include <kernel/kernel_types.h>

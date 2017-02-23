@@ -7,8 +7,11 @@
 #include <kernel/MemoryManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/TimerManager.h>
+#include <kernel/UserManager.h>
 #include <kernel/KeyboardDriver.h>
 #include <kernel/TtyManager.h>
+
+class User;
 
 class KernelManager
 {
@@ -20,6 +23,7 @@ public:
     MemoryManager& getMemoryManager();
     InterruptManager& getInterruptManager();
     TimerManager& getTimerManager();
+    UserManager& getUserManager();
     TtyManager& getTtyManager();
 
     KeyboardDriver& getKeyboardDriver();
@@ -36,6 +40,7 @@ public:
 
 private:
     void displayBanner();
+    void displayUserPrompt(const User& user);
 
 private:
     CpuManager _cpuManager;
@@ -43,6 +48,7 @@ private:
     MemoryManager _memoryManager;
     InterruptManager _interruptManager;
     TimerManager _timerManager;
+    UserManager _userManager;
     TtyManager _ttyManager;
 
     KeyboardDriver _keyboardDriver;

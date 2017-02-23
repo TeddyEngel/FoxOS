@@ -9,6 +9,7 @@ KernelManager::KernelManager()
     , _memoryManager(*this)
     , _interruptManager(*this)
     , _timerManager(*this)
+    , _userManager(*this)
     , _ttyManager(*this)
     , _keyboardDriver(*this)
 {
@@ -37,6 +38,11 @@ InterruptManager& KernelManager::getInterruptManager()
 TimerManager& KernelManager::getTimerManager()
 {
     return _timerManager;
+}
+
+UserManager& KernelManager::getUserManager()
+{
+    return _userManager;
 }
 
 TtyManager& KernelManager::getTtyManager()
@@ -84,6 +90,12 @@ void KernelManager::initialize()
     else
         reportStepFailed(initializeMessage, TimerManager::SERVICE_NAME);
 
+    // User management
+    if (!_userManager.initialize())
+        reportStepOk(initializeMessage, UserManager::SERVICE_NAME);
+    else
+        reportStepFailed(initializeMessage, UserManager::SERVICE_NAME);
+
     // Keyboard
     if (!_keyboardDriver.initialize())
         reportStepOk(initializeMessage, KeyboardDriver::SERVICE_NAME);
@@ -98,6 +110,11 @@ void KernelManager::displayBanner()
     const char* FOX_BANNER = " ,-.      .-,\n |-.\\ __ /.-|\n \\  `    `  /\n / _     _  \\\n | _`q  p _ |\n \'._=/  \\=_.'\n   {`\\()/`}`\\                   FoxOS\n   {      }  \\\n   |{    }    \\\n   \\ '--'   .- \\\n   |-      /    \\\n   | | | | |     ;\n   | | |.;.,..__ |\n .-\"\";`         `|\n /    |           /\n `-../____,..---'`\n";
     
     printf(FOX_BANNER);
+}
+
+void KernelManager::displayUserPrompt(const User& user)
+{
+    printf("\n%s$ ", user.getName());
 }
 
 #ifdef TEST_MODE
@@ -129,6 +146,7 @@ void KernelManager::runTests()
 void KernelManager::runLoop()
 {
     displayBanner();
+    displayUserPrompt(getUserManager()._activeUser);
 }
 
 void KernelManager::reportStepOk(const char* stepMessage, const char* stepName)
