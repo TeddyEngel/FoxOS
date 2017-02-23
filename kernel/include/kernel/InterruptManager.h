@@ -4,7 +4,6 @@
 #include <cstdint>
 
 #include <kernel/idt_types.h>
-#include <kernel/idt_flush.h>
 #include <kernel/isr_handlers.h>
 
 class KernelManager;
@@ -27,6 +26,7 @@ public:
     void registerHandler(uint8_t n, fct_handler);
 
 private:
+    inline void nativeLoadIdt();
     void remapIrqs(int32_t offset1, int32_t offset2);
     void setGate(uint8_t, uint32_t, uint16_t, uint8_t);
     void setCpuGates();

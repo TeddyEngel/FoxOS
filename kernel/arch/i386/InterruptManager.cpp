@@ -29,25 +29,25 @@ int InterruptManager::initialize()
 
   setIrqGates();
 
-  idt_flush((uint32_t)&_ptr);
+  nativeLoadIdt();
 
   return 0;
 }
 
 void InterruptManager::enableInterrupts()
 {
-  asm volatile("sti");
+  __asm__ __volatile__("sti");
 }
 
 void InterruptManager::disableInterrupts()
 {
-  asm volatile("cli");
+  __asm__ __volatile__("cli");
 }
 
 bool InterruptManager::areInterruptsEnabled()
 {
   unsigned long flags;
-  asm volatile( "pushf\n\t"
+  __asm__ __volatile__( "pushf\n\t"
                  "pop %0"
                  : "=g"(flags) );
   return flags & (1 << 9);
@@ -66,6 +66,11 @@ fct_handler InterruptManager::getHandler(uint8_t n)
 void InterruptManager::registerHandler(uint8_t n, fct_handler handler)
 {
     _handlers[n] = handler;
+}
+
+inline void InterruptManager::nativeLoadIdt()
+{
+    __asm__ __volatile__("lidt %[in]"::[in]"m" (_ptr));
 }
 
 /*
