@@ -20,8 +20,8 @@ AFLAGS:=$(AFLAGS)
 CFLAGS:=$(CFLAGS) -std=gnu11 -ffreestanding -Wall -Wextra
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -Wall -Wextra
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lk++
-# LIBS:=$(LIBS) -nostdlib -lk -lk++ -lgcc
+# LIBS:=$(LIBS) -nostdlib -lk++
+LIBS:=$(LIBS) -nostdlib -lk++ -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
 
