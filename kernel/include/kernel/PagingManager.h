@@ -1,8 +1,8 @@
 // TODO: Implement real bitset class
 // TODO: Use real bitset class instead of ad-hoc one
 
-#ifndef _KERNEL_MEMORY_MANAGER_H
-#define _KERNEL_MEMORY_MANAGER_H
+#ifndef _KERNEL_PAGING_MANAGER_H
+#define _KERNEL_PAGING_MANAGER_H
 
 #include <kernel/PageTypes.h>
 #include <kernel/registers.h>
@@ -11,13 +11,13 @@
 
 class KernelManager;
 
-class MemoryManager
+class PagingManager
 {
 public:
     static const char* SERVICE_NAME;
     
 public:
-    MemoryManager(KernelManager&);
+    PagingManager(KernelManager&);
 
     /**
       Sets up the environment, page directories etc and
@@ -73,4 +73,4 @@ private:
     uint32_t _nframes;
 };
 
-#endif /* _KERNEL_MEMORY_MANAGER_H */
+#endif /* _KERNEL_PAGING_MANAGER_H */

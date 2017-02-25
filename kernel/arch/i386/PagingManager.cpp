@@ -1,4 +1,4 @@
-#include <kernel/MemoryManager.h>
+#include <kernel/PagingManager.h>
 
 #include <cstring>
 #include <cstdio>
@@ -9,9 +9,9 @@
 extern KernelManager kernelManager;
 extern uint32_t placement_address;
 
-const char* MemoryManager::SERVICE_NAME = "Paging";
+const char* PagingManager::SERVICE_NAME = "Paging";
 
-MemoryManager::MemoryManager(KernelManager& kernelManager)
+PagingManager::PagingManager(KernelManager& kernelManager)
     : _kernelManager(kernelManager)
     , _kernelDirectory(NULL)
     , _currentDirectory(NULL)
@@ -19,7 +19,7 @@ MemoryManager::MemoryManager(KernelManager& kernelManager)
 
 }
 
-int MemoryManager::initialize()
+int PagingManager::initialize()
 {
     // The size of physical memory. For the moment we
    // assume it is 16MB big.
@@ -63,7 +63,7 @@ int MemoryManager::initialize()
   return 0;
 }
 
-void MemoryManager::switchPageDirectory(page_directory_t* dir)
+void PagingManager::switchPageDirectory(page_directory_t* dir)
 {
     _currentDirectory = dir;
     asm volatile("mov %0, %%cr3":: "r"(&dir->tablesPhysical));
@@ -73,7 +73,7 @@ void MemoryManager::switchPageDirectory(page_directory_t* dir)
     asm volatile("mov %0, %%cr0":: "r"(cr0));
 }
 
-page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t* dir)
+page_t* PagingManager::getPage(uint32_t address, int make, page_directory_t* dir)
 {
     // Turn the address into an index.
     address /= PAGE_SIZE;
@@ -92,7 +92,7 @@ page_t* MemoryManager::getPage(uint32_t address, int make, page_directory_t* dir
     return NULL;
 }
 
-void MemoryManager::onPageFault(const registers_t& regs)
+void PagingManager::onPageFault(const registers_t& regs)
 {
   // A page fault has occurred.
   // The faulting address is stored in the CR2 register.
@@ -118,12 +118,12 @@ void MemoryManager::onPageFault(const registers_t& regs)
   _kernelManager.panic("Page fault");
 }
 
-void MemoryManager::onPageFaultHook(const registers_t& regs)
+void PagingManager::onPageFaultHook(const registers_t& regs)
 {
-    kernelManager.getMemoryManager().onPageFault(regs);
+    kernelManager.getPagingManager().onPageFault(regs);
 }
 
-void MemoryManager::setFrame(uint32_t frameAddress)
+void PagingManager::setFrame(uint32_t frameAddress)
 {
    uint32_t frame = frameAddress / PAGE_SIZE;
    uint32_t idx = INDEX_FROM_BIT(frame);
@@ -131,7 +131,7 @@ void MemoryManager::setFrame(uint32_t frameAddress)
    _frames[idx] |= (0x1 << off);
 }
 
-void MemoryManager::clearFrame(uint32_t frameAddress)
+void PagingManager::clearFrame(uint32_t frameAddress)
 {
    uint32_t frame = frameAddress / PAGE_SIZE;
    uint32_t idx = INDEX_FROM_BIT(frame);
@@ -139,7 +139,7 @@ void MemoryManager::clearFrame(uint32_t frameAddress)
    _frames[idx] &= ~(0x1 << off);
 }
 
-uint32_t MemoryManager::testFrame(uint32_t frameAddress)
+uint32_t PagingManager::testFrame(uint32_t frameAddress)
 {
    uint32_t frame = frameAddress / PAGE_SIZE;
    uint32_t idx = INDEX_FROM_BIT(frame);
@@ -147,7 +147,7 @@ uint32_t MemoryManager::testFrame(uint32_t frameAddress)
    return (_frames[idx] & (0x1 << off));
 }
 
-uint32_t MemoryManager::firstFrame()
+uint32_t PagingManager::firstFrame()
 {
    uint32_t i, j;
 
@@ -169,7 +169,7 @@ uint32_t MemoryManager::firstFrame()
    return 0;
 } 
 
-void MemoryManager::allocFrame(page_t* page, int isKernel, int isWriteable)
+void PagingManager::allocFrame(page_t* page, int isKernel, int isWriteable)
 {
    if (page->frame != NULL)
        return; // Frame was already allocated, return straight away.
@@ -187,7 +187,7 @@ void MemoryManager::allocFrame(page_t* page, int isKernel, int isWriteable)
    }
 }
 
-void MemoryManager::freeFrame(page_t *page)
+void PagingManager::freeFrame(page_t *page)
 {
    uint32_t frame;
    if (!(frame = page->frame))

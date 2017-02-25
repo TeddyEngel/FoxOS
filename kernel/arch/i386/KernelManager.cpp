@@ -25,7 +25,7 @@ GdtManager& KernelManager::getGdtManager()
     return _gdtManager;
 }
 
-MemoryManager& KernelManager::getMemoryManager()
+PagingManager& KernelManager::getPagingManager()
 {
     return _memoryManager;
 }
@@ -79,9 +79,9 @@ void KernelManager::initialize()
 
     // Memory
     if (!_memoryManager.initialize())
-        reportStepOk(initializeMessage, MemoryManager::SERVICE_NAME);
+        reportStepOk(initializeMessage, PagingManager::SERVICE_NAME);
     else
-        reportStepFailed(initializeMessage, MemoryManager::SERVICE_NAME);
+        reportStepFailed(initializeMessage, PagingManager::SERVICE_NAME);
 
     // System clock
     _interruptManager.enableInterrupts();

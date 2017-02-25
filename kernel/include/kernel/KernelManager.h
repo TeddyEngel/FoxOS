@@ -4,7 +4,7 @@
 #include <kernel/kernel_types.h>
 #include <kernel/CpuManager.h>
 #include <kernel/GdtManager.h>
-#include <kernel/MemoryManager.h>
+#include <kernel/PagingManager.h>
 #include <kernel/InterruptManager.h>
 #include <kernel/TimerManager.h>
 #include <kernel/UserManager.h>
@@ -20,7 +20,7 @@ public:
 
     CpuManager& getCpuManager();
     GdtManager& getGdtManager();
-    MemoryManager& getMemoryManager();
+    PagingManager& getPagingManager();
     InterruptManager& getInterruptManager();
     TimerManager& getTimerManager();
     UserManager& getUserManager();
@@ -45,7 +45,7 @@ private:
 private:
     CpuManager _cpuManager;
     GdtManager _gdtManager;
-    MemoryManager _memoryManager;
+    PagingManager _memoryManager;
     InterruptManager _interruptManager;
     TimerManager _timerManager;
     UserManager _userManager;
