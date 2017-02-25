@@ -12,6 +12,7 @@ KernelManager::KernelManager()
     , _userManager(*this)
     , _ttyManager(*this)
     , _keyboardDriver(*this)
+    , _memoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, false, false)
 {
 }
 
@@ -53,6 +54,11 @@ TtyManager& KernelManager::getTtyManager()
 KeyboardDriver& KernelManager::getKeyboardDriver()
 {
     return _keyboardDriver;
+}
+
+MemoryHeap& KernelManager::getMemoryHeap()
+{
+    return _memoryHeap;
 }
 
 void KernelManager::initialize()

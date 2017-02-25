@@ -2,8 +2,9 @@
 
 #include <predicates>
 
-// const uint32_t MemoryHeap::KHEAP_START = 0xC0000000;
-// const uint32_t MemoryHeap::KHEAP_INITIAL_SIZE = 0x100000;
+const uint32_t MemoryHeap::KHEAP_START = 0xC0000000;
+const uint32_t MemoryHeap::KHEAP_INITIAL_SIZE = 0x100000;
+const uint32_t MemoryHeap::KHEAP_LIMIT = 0xFFFFFFFF;
 const uint32_t MemoryHeap::INDEX_SIZE = 0x20000;
 const uint32_t MemoryHeap::MAGIC = 0x123890AB;
 const uint32_t MemoryHeap::MIN_SIZE = 0x70000;

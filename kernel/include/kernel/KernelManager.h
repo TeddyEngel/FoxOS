@@ -10,6 +10,7 @@
 #include <kernel/UserManager.h>
 #include <kernel/KeyboardDriver.h>
 #include <kernel/TtyManager.h>
+#include <kernel/MemoryHeap.h>
 
 class User;
 
@@ -27,6 +28,8 @@ public:
     TtyManager& getTtyManager();
 
     KeyboardDriver& getKeyboardDriver();
+
+    MemoryHeap& getMemoryHeap();
 
     void initialize();
     #ifdef TEST_MODE
@@ -51,7 +54,15 @@ private:
     UserManager _userManager;
     TtyManager _ttyManager;
 
+    /*
+    ** Drivers
+    */
     KeyboardDriver _keyboardDriver;
+
+    /*
+    ** Memory related
+    */
+    MemoryHeap _memoryHeap;
 };
 
 #endif /* _KERNEL_KERNEL_MANAGER_H */

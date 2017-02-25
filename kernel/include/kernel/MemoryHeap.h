@@ -10,8 +10,9 @@
 class MemoryHeap
 {
 public:
-  // static const uint32_t KHEAP_START;
-  // static const uint32_t KHEAP_INITIAL_SIZE;
+  static const uint32_t KHEAP_START;
+  static const uint32_t KHEAP_INITIAL_SIZE;
+  static const uint32_t KHEAP_LIMIT;
   static const uint32_t INDEX_SIZE;
   static const uint32_t MAGIC;
   static const uint32_t MIN_SIZE;
