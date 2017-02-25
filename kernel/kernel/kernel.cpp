@@ -4,7 +4,7 @@
 */
 
 #include <kernel/kernel.h>
-
+#include <kernel/cxa.h>
 #include <kernel/kernel_types.h>
 #include <kernel/KernelManager.h>
 
