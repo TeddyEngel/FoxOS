@@ -1,6 +1,7 @@
 #ifndef _KERNEL_MEMORY_HEAP_H
 #define _KERNEL_MEMORY_HEAP_H
 
+#include <cstddef>
 #include <cstdint>
 #include <ordered_array>
 
@@ -19,6 +20,8 @@ public:
 
 public:
   MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readOnly);
+
+  static void* operator new(std::size_t size);
   // Create a new heap
   // heap_t *create_heap(uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readonly);
 

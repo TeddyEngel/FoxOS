@@ -1,5 +1,7 @@
 #include <kernel/MemoryHeap.h>
 
+#include <cstdio>
+#include <memory>
 #include <predicates>
 
 const uint32_t MemoryHeap::KHEAP_START = 0xC0000000;
@@ -17,7 +19,14 @@ MemoryHeap::MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t super
     , _supervisor(supervisor)
     , _readOnly(readOnly)
 {
+}
 
+void* MemoryHeap::operator new(std::size_t size)
+{
+    MemoryHeap* memoryHeap = (MemoryHeap*)kmalloc(size);
+    
+    printf("allocating a memory heap of size %d!\n", size);
+    return memoryHeap;
 }
 
 void* MemoryHeap::alloc(uint32_t size, uint8_t pageAlign)
