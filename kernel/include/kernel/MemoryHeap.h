@@ -26,7 +26,9 @@ public:
   void *alloc(uint32_t size, uint8_t pageAlign);
 
   // Releases a block allocated with 'alloc'.
-  void free(void *p); 
+  void free(void *p);
+
+  int32_t findSmallestHole(uint32_t size, bool pageAlign);
 
 public:
   ordered_array _index;
