@@ -7,14 +7,17 @@
 
 extern KernelManager kernelManager;
 
-void isr_handler(registers_t regs)
+void isr_handler(registers_t* regs)
 {
+    if (!regs)
+        return;
+    registers_t& regsRef = *regs;
     InterruptManager& interruptManager = kernelManager.getInterruptManager();
-    if (interruptManager.hasHandler(regs.int_no))
+    if (interruptManager.hasHandler(regsRef.int_no))
     {
-        fct_handler handler = interruptManager.getHandler(regs.int_no);
-        handler(regs);
+        fct_handler handler = interruptManager.getHandler(regsRef.int_no);
+        handler(regsRef);
     }
     else
-        printf("Unhandled interrupt: %d (%d)\n", regs.int_no, regs.err_code);
+        printf("Unhandled interrupt: %d (%d)\n", regsRef.int_no, regsRef.err_code);
 }

@@ -5,7 +5,7 @@
 
 extern "C"
 {
-    void isr_handler(registers_t);
+    void isr_handler(registers_t*);
 }
 
 #endif /* _KERNEL_ISR_HANDLER_H */
