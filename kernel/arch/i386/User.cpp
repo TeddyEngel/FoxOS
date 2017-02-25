@@ -17,7 +17,7 @@ uint32_t User::getId() const
     return _id;
 }
 
-char* User::getName() const
+const char* User::getName() const
 {
     return _name;
 }

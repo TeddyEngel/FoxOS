@@ -11,12 +11,12 @@ public:
     User(KernelManager&);
 
     uint32_t getId() const;
-    char* getName() const;
+    const char* getName() const;
 
 private: // TODO: Make getters setters once this is fixed, or not?
     KernelManager& _kernelManager;
     uint32_t _id;
-    char* _name;
+    const char* _name;
 };
 
 #endif /* _KERNEL_USER_H */
