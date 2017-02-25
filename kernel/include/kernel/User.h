@@ -13,7 +13,7 @@ public:
     uint32_t getId() const;
     const char* getName() const;
 
-private: // TODO: Make getters setters once this is fixed, or not?
+private:
     KernelManager& _kernelManager;
     uint32_t _id;
     const char* _name;
