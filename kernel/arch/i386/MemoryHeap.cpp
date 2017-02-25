@@ -47,7 +47,7 @@ int32_t MemoryHeap::findSmallestHole(uint32_t size, bool pageAlign)
            uint32_t location = (uint32_t)header;
            int32_t offset = 0;
 
-           if ((location + sizeof(MemoryBlockHeader)) & 0xFFFFF000 != 0)
+           if ((location + sizeof(MemoryBlockHeader) & 0xFFFFF000) != 0)
                offset = 0x1000 /* page size */  - (location+sizeof(MemoryBlockHeader)) % 0x1000;
            int32_t holeSize = (int32_t)header->_size - offset;
            // Can we fit now?
