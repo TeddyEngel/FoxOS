@@ -15,7 +15,7 @@ public:
     TtyManager(KernelManager&);
 
     int initialize();
-    void write(const char* data, size_t size);
+    void write(const char* data, std::size_t size);
     void writeString(const char* data);
     void clear();
     void setTextColorLightGrey();
@@ -28,7 +28,7 @@ public:
 
 private:
     void setColor(uint8_t color);
-    void putEntryAt(unsigned char c, uint8_t color, size_t x, size_t y);
+    void putEntryAt(unsigned char c, uint8_t color, std::size_t x, std::size_t y);
     void putEntryAtCursor(unsigned char c, uint8_t color);
     void scrollUp();
     void scrollDown();
@@ -38,15 +38,15 @@ private:
     void moveCursorBeginLine();
 
 private:
-    static const size_t VGA_WIDTH;
-    static const size_t VGA_HEIGHT;
+    static const std::size_t VGA_WIDTH;
+    static const std::size_t VGA_HEIGHT;
     static uint16_t* const VGA_MEMORY;
     static const uint8_t TAB_WIDTH;
 
 private:
     KernelManager& _kernelManager;
-    size_t _cursor_row;
-    size_t _cursor_column;
+    std::size_t _cursor_row;
+    std::size_t _cursor_column;
     uint8_t _color;
     uint16_t* _buffer;
 };

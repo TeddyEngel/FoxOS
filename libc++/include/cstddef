@@ -3,6 +3,9 @@
 
 #define NULL 0
 
-typedef long unsigned int   size_t;
+namespace std
+{
+    typedef unsigned long   size_t;
+}
 
 #endif /* _CSTDDEF */

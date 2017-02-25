@@ -9,8 +9,8 @@
 #include "vga.h"
 
 const char* TtyManager::SERVICE_NAME = "TTY";
-const size_t TtyManager::VGA_WIDTH = 80;
-const size_t TtyManager::VGA_HEIGHT = 25;
+const std::size_t TtyManager::VGA_WIDTH = 80;
+const std::size_t TtyManager::VGA_HEIGHT = 25;
 uint16_t* const TtyManager::VGA_MEMORY = (uint16_t*) 0xB8000;
 const uint8_t TtyManager::TAB_WIDTH = 4;
 
@@ -30,9 +30,9 @@ int TtyManager::initialize()
     return 0;
 }
 
-void TtyManager::write(const char* data, size_t size)
+void TtyManager::write(const char* data, std::size_t size)
 {
-    for (size_t i = 0; i < size; i++)
+    for (std::size_t i = 0; i < size; i++)
         putchar(data[i]);
     movePhysicalCursor(_cursor_column, _cursor_row);
 }
@@ -44,8 +44,8 @@ void TtyManager::writeString(const char* data)
 
 void TtyManager::clear()
 {
-    for (size_t y = 0; y < VGA_HEIGHT; ++y)
-        for (size_t x = 0; x < VGA_WIDTH; ++x)
+    for (std::size_t y = 0; y < VGA_HEIGHT; ++y)
+        for (std::size_t x = 0; x < VGA_WIDTH; ++x)
             putEntryAt(' ', _color, y, x);
 }
 
@@ -121,9 +121,9 @@ void TtyManager::setColor(uint8_t color)
     _color = color;
 }
 
-void TtyManager::putEntryAt(unsigned char c, uint8_t color, size_t x, size_t y)
+void TtyManager::putEntryAt(unsigned char c, uint8_t color, std::size_t x, std::size_t y)
 {
-    const size_t index = y * VGA_WIDTH + x;
+    const std::size_t index = y * VGA_WIDTH + x;
     _buffer[index] = vga_entry(c, color);
 }
 
@@ -137,38 +137,38 @@ void TtyManager::scrollUp()
     // TODO: Fill the top line with history line
 
     // Move all lines down
-    for (size_t y = VGA_HEIGHT - 1; y >= 1; --y)
+    for (std::size_t y = VGA_HEIGHT - 1; y >= 1; --y)
     {
-        for (size_t x = 0; x < VGA_WIDTH; ++x)
+        for (std::size_t x = 0; x < VGA_WIDTH; ++x)
         {
-            const size_t index = y * VGA_WIDTH + x;
-            const size_t index_previous_line = (y - 1) * VGA_WIDTH + x;
+            const std::size_t index = y * VGA_WIDTH + x;
+            const std::size_t index_previous_line = (y - 1) * VGA_WIDTH + x;
 
             _buffer[index] = _buffer[index_previous_line];
         }
     }
 
     // For now we just clear the first line
-    for (size_t x = 0; x < VGA_WIDTH; x++)
+    for (std::size_t x = 0; x < VGA_WIDTH; x++)
         putEntryAt(' ', _color, x, 0);
 }
 
 void TtyManager::scrollDown()
 {
     // Move all lines up
-    for (size_t y = 0; y < VGA_HEIGHT - 1; ++y)
+    for (std::size_t y = 0; y < VGA_HEIGHT - 1; ++y)
     {
-        for (size_t x = 0; x < VGA_WIDTH; ++x)
+        for (std::size_t x = 0; x < VGA_WIDTH; ++x)
         {
-            const size_t index = y * VGA_WIDTH + x;
-            const size_t index_next_line = (y + 1) * VGA_WIDTH + x;
+            const std::size_t index = y * VGA_WIDTH + x;
+            const std::size_t index_next_line = (y + 1) * VGA_WIDTH + x;
 
             _buffer[index] = _buffer[index_next_line];
         }
     }
 
     // Clear last line
-    for (size_t x = 0; x < VGA_WIDTH; x++)
+    for (std::size_t x = 0; x < VGA_WIDTH; x++)
         putEntryAt(' ', _color, x, (VGA_HEIGHT - 1));
 }
 
@@ -215,7 +215,7 @@ void TtyManager::movePhysicalCursor(uint8_t column, uint8_t row)
         column = VGA_WIDTH - 1;
     if (row >= VGA_HEIGHT)
         row = VGA_HEIGHT - 1;
-    const size_t index = row * VGA_WIDTH + column;
+    const std::size_t index = row * VGA_WIDTH + column;
     outb(0x3D4, 14);                  // Tell the VGA board we are setting the high cursor byte.
     outb(0x3D5, index >> 8);          // Send the high cursor byte.
     outb(0x3D4, 15);                  // Tell the VGA board we are setting the low cursor byte.
