@@ -3,7 +3,7 @@
   isr%1:
     cli
     push byte 0
-    push byte %1
+    push %1
     jmp isr_common_stub
 %endmacro
 
@@ -11,7 +11,7 @@
   [GLOBAL isr%1]
   isr%1:
     cli
-    push byte %1
+    push %1
     jmp isr_common_stub
 %endmacro 
 
