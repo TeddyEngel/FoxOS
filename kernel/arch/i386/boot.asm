@@ -69,9 +69,10 @@ _start:
     ; C++ features such as global constructors and exceptions will require
     ; runtime support to work as well.
     ; Setting global constructors
+
     extern _init
     call _init
-
+    
     extern kernelEarly
     call kernelEarly
  
@@ -84,6 +85,8 @@ _start:
     extern kernelMain
     call kernelMain
  
+    extern _fini
+    call _fini
     ; If the system has nothing more to do, put the computer into an
     ; infinite loop. To do that:
     ; 1) Disable interrupts with cli (clear interrupt enable in eflags).
