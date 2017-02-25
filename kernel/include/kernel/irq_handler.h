@@ -5,7 +5,7 @@
 
 extern "C"
 {
-    void irq_handler(registers_t);
+    void irq_handler(registers_t*);
 }
 
 #endif /* _KERNEL_IRQ_HANDLER_H */

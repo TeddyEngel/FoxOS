@@ -9,8 +9,9 @@
 
 extern KernelManager kernelManager;
 
-void irq_handler(registers_t regs)
+void irq_handler(registers_t* pRegs)
 {
+    registers_t& regs = *pRegs;
     // Send an EOI (end of interrupt) signal to the PICs.
     // If this interrupt involved the slave.
     if (regs.int_no >= PIC_MASTER + PIC_MASTER_IRQ_ENTRIES)

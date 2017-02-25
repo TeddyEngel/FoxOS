@@ -42,14 +42,18 @@ irq_common_stub:
   mov fs, ax
   mov gs, ax
 
+  push esp
+
   call irq_handler
 
-  pop ebx        ; reload the original data segment descriptor
-  mov ebx, esi
-  mov ds, bx
-  mov es, bx
-  mov fs, bx
-  mov gs, bx
+  pop eax
+
+  pop eax        ; reload the original data segment descriptor
+  mov eax, esi
+  mov ds, ax
+  mov es, ax
+  mov fs, ax
+  mov gs, ax
 
   popa                     ; Pops edi,esi,ebp...
   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
