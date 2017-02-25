@@ -17,7 +17,7 @@ export INCLUDEDIR=$PREFIX/include
 
 export AFLAGS=''
 export CFLAGS='-O2 -g'
-export CPPFLAGS='-O2 -g -fstack-protector'
+export CPPFLAGS='-O2 -g -fno-stack-protector'
 
 # Configure the target os name
 export OSNAME="$(./osname.sh)"
