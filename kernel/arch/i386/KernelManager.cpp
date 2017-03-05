@@ -12,7 +12,7 @@ KernelManager::KernelManager()
     , _userManager(*this)
     , _ttyManager(*this)
     , _keyboardDriver(*this)
-    , _memoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, false, false)
+    , _memoryHeap(nullptr)
 {
 }
 
@@ -56,7 +56,7 @@ KeyboardDriver& KernelManager::getKeyboardDriver()
     return _keyboardDriver;
 }
 
-MemoryHeap& KernelManager::getMemoryHeap()
+MemoryHeap* KernelManager::getMemoryHeap()
 {
     return _memoryHeap;
 }
@@ -108,7 +108,12 @@ void KernelManager::initialize()
     else
         reportStepFailed(initializeMessage, KeyboardDriver::SERVICE_NAME);
 
-    printf("\n");
+    // Test allocation
+    _memoryHeap = (MemoryHeap*) MemoryHeap::operator new(sizeof(MemoryHeap));
+    // _memoryHeap = new MemoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0); // TODO: Allocate like this later on
+    MemoryHeap::place(_memoryHeap, MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0);
+
+    // printf("\n");
 }
 
 void KernelManager::displayBanner()

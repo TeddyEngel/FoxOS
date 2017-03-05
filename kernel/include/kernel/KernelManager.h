@@ -29,7 +29,7 @@ public:
 
     KeyboardDriver& getKeyboardDriver();
 
-    MemoryHeap& getMemoryHeap();
+    MemoryHeap* getMemoryHeap();
 
     void initialize();
     #ifdef TEST_MODE
@@ -62,7 +62,7 @@ private:
     /*
     ** Memory related
     */
-    MemoryHeap _memoryHeap;
+    MemoryHeap* _memoryHeap;
 };
 
 #endif /* _KERNEL_KERNEL_MANAGER_H */
