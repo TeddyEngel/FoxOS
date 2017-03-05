@@ -109,12 +109,11 @@ void KernelManager::initialize()
     else
         reportStepFailed(initializeMessage, KeyboardDriver::SERVICE_NAME);
 
-    // Test allocation
-    _memoryHeap = (MemoryHeap*) MemoryHeap::operator new(sizeof(MemoryHeap));
-    // _memoryHeap = new MemoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0); // TODO: Allocate like this later on
-    MemoryHeap::place(_memoryHeap, MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0);
-
-    // printf("\n");
+    // Heap
+    _memoryHeap = new MemoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0); // TODO: Allocate like this later on
+    // If needed, can also allocate using op new + placement
+    // _memoryHeap = (MemoryHeap*) MemoryHeap::operator new(sizeof(MemoryHeap));
+    // MemoryHeap::place(_memoryHeap, MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0);
 }
 
 void KernelManager::displayBanner()
@@ -133,6 +132,7 @@ void KernelManager::displayUserPrompt(const User& user)
 void KernelManager::runTests()
 {
     // TODO: Add a test so that calling that should return an interrupt message
+    // asm volatile ("int $0x3");
     // asm volatile ("int $0x3");
 
     // TODO: Add a test that triggers a page fault
