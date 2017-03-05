@@ -1,6 +1,7 @@
 #include <kernel/KernelManager.h>
 
 #include <cstring>
+#include <cstdint>
 #include <cstdio>
 
 KernelManager::KernelManager()
