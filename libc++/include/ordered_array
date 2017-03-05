@@ -14,12 +14,8 @@ typedef int8_t (*fctLessThan)(type_t, type_t);
 class ordered_array
 {
 public:
-  ordered_array(uint32_t max_size, fctLessThan);
-  ordered_array(void *addr, uint32_t max_size, fctLessThan);
-
-  // We use those methods in a kernel context, when dynamic memory isn't available yet
-  // static ordered_array create(uint32_t max_size, fctLessThan);
-  // static ordered_array place(void *addr, uint32_t max_size, fctLessThan);
+  ordered_array(uint32_t maxSize, fctLessThan);
+  ordered_array(void* addr, uint32_t maxSize, fctLessThan);
 
   ~ordered_array();
 

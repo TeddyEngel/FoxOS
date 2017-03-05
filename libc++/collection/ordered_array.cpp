@@ -14,7 +14,7 @@ ordered_array::ordered_array(uint32_t maxSize, fctLessThan lessThan)
   memset(_array, 0, maxSize * sizeof(type_t));
 }
 
-ordered_array::ordered_array(void *addr, uint32_t maxSize, fctLessThan lessThan)
+ordered_array::ordered_array(void* addr, uint32_t maxSize, fctLessThan lessThan)
   : _array((type_t*)addr)
   , _size(0)
   , _maxSize(maxSize)
@@ -22,30 +22,6 @@ ordered_array::ordered_array(void *addr, uint32_t maxSize, fctLessThan lessThan)
 {
   memset(_array, 0, maxSize * sizeof(type_t));
 }
-
-/*
-ordered_array ordered_array::create(uint32_t maxSize, fctLessThan lessThan)
-{
-  ordered_array newArray;
-  newArray._array = (void*)kmalloc(maxSize * sizeof(type_t));
-  memset(newArray._array, 0, maxSize * sizeof(type_t));
-  newArray._size = 0;
-  newArray._maxSize = maxSize;
-  newArray._lessThan = lessThan;
-  return newArray;
-}
-
-ordered_array ordered_array::place(void *addr, uint32_t maxSize, fctLessThan lessThan)
-{
-  ordered_array newArray;
-  newArray._array = (type_t*)addr;
-  memset(newArray._array, 0, maxSize * sizeof(type_t));
-  newArray._size = 0;
-  newArray._maxSize = maxSize;
-  newArray._lessThan = lessThan;
-  return newArray;
-}
-*/
 
 ordered_array::~ordered_array()
 {
