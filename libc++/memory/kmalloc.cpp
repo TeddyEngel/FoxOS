@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+#include <kernel/PageTypes.h>
+
 extern uint32_t end;
 uint32_t placement_address = (uint32_t)&end;
 
@@ -11,7 +13,7 @@ uint32_t kmalloc_int(uint32_t sz, bool align, uint32_t* physicalAddress)
     {
         // Align it.
         placement_address &= 0xFFFFF000;
-        placement_address += 0x1000;
+        placement_address += PAGE_SIZE;
     }
     if (physicalAddress)
         *physicalAddress = placement_address;
