@@ -2,5 +2,6 @@
 
 void* operator new(std::size_t sz)
 {
-    return 0;
+    (void)sz;
+    return (void *)1;
 }
