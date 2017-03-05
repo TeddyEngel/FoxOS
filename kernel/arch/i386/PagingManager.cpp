@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <kernel/KernelManager.h>
+#include <kernel/MemoryHeap.h>
 
 extern KernelManager kernelManager;
 extern uint32_t placement_address;
@@ -34,6 +35,15 @@ int PagingManager::initialize()
    memset(_kernelDirectory, 0, sizeof(page_directory_t));
    _currentDirectory = _kernelDirectory;
 
+  // Map some pages in the kernel heap area.
+  // Here we call getPage but not allocFrame. This causes page_table_t's 
+  // to be created where necessary. We can't allocate frames yet because they
+  // they need to be identity mapped first below, and yet we can't increase
+  // placement_address between identity mapping and enabling the heap!
+  uint32_t i = 0;
+  for (i = MemoryHeap::KHEAP_START; i < MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE; i += PAGE_SIZE)
+      getPage(i, 1, _kernelDirectory);
+
    // We need to identity map (phys addr = virt addr) from
    // 0x0 to the end of used memory, so we can access this
    // transparently, as if paging wasn't enabled.
@@ -42,13 +52,12 @@ int PagingManager::initialize()
    // by calling kmalloc(). A while loop causes this to be
    // computed on-the-fly rather than once at the start.
    
-   uint32_t i = 0;
-   while (i < placement_address)
-   {
-       // Kernel code is readable but not writeable from userspace.
-       allocFrame(getPage(i, 1, _kernelDirectory), 0, 0);
-       i += PAGE_SIZE;
-   }
+  for (i = 0; i < placement_address + PAGE_SIZE; i += PAGE_SIZE)
+     allocFrame(getPage(i, 1, _kernelDirectory), 0, 0); // Kernel code is readable but not writeable from userspace.
+
+  // Now allocate those pages we mapped earlier.
+  for (i = MemoryHeap::KHEAP_START; i < MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE; i += PAGE_SIZE)
+      allocFrame(getPage(i, 1, _kernelDirectory), 0, 0);
 
   // Before we enable paging, we must register our page fault handler.
   InterruptManager& interruptManager = _kernelManager.getInterruptManager();
@@ -80,7 +89,7 @@ page_t* PagingManager::getPage(uint32_t address, int make, page_directory_t* dir
     // Find the page table containing this address.
     uint32_t table_idx = address / PAGE_TABLES_PER_DIRECTORY;
     if (dir->tables[table_idx]) // If this table is already assigned
-       return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
+      return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
     else if(make)
     {
        uint32_t tmp;
