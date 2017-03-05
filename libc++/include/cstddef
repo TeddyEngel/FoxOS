@@ -2,6 +2,7 @@
 #define _CSTDDEF 1
 
 #define NULL 0
+#define nullptr 0
 
 namespace std
 {
