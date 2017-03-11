@@ -7,7 +7,7 @@
 KernelManager::KernelManager()
     : _cpuManager(*this)
     , _gdtManager(*this)
-    , _memoryManager(*this)
+    , _pagingManager(*this)
     , _interruptManager(*this)
     , _timerManager(*this)
     , _userManager(*this)
@@ -29,7 +29,7 @@ GdtManager& KernelManager::getGdtManager()
 
 PagingManager& KernelManager::getPagingManager()
 {
-    return _memoryManager;
+    return _pagingManager;
 }
 
 InterruptManager& KernelManager::getInterruptManager()
@@ -85,7 +85,7 @@ void KernelManager::initialize()
         reportStepFailed(initializeMessage, InterruptManager::SERVICE_NAME);
 
     // Memory
-    if (!_memoryManager.initialize())
+    if (!_pagingManager.initialize())
         reportStepOk(initializeMessage, PagingManager::SERVICE_NAME);
     else
         reportStepFailed(initializeMessage, PagingManager::SERVICE_NAME);

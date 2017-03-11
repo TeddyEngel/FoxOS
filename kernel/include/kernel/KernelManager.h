@@ -48,7 +48,7 @@ private:
 private:
     CpuManager _cpuManager;
     GdtManager _gdtManager;
-    PagingManager _memoryManager;
+    PagingManager _pagingManager;
     InterruptManager _interruptManager;
     TimerManager _timerManager;
     UserManager _userManager;
