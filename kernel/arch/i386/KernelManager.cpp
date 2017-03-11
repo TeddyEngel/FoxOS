@@ -110,7 +110,7 @@ void KernelManager::initialize()
         reportStepFailed(initializeMessage, KeyboardDriver::SERVICE_NAME);
 
     // Heap
-    _memoryHeap = new MemoryHeap(MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0); // TODO: Allocate like this later on
+    _memoryHeap = new MemoryHeap(_pagingManager, MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0); // TODO: Allocate like this later on
     // If needed, can also allocate using op new + placement
     // _memoryHeap = (MemoryHeap*) MemoryHeap::operator new(sizeof(MemoryHeap));
     // MemoryHeap::place(_memoryHeap, MemoryHeap::KHEAP_START, MemoryHeap::KHEAP_START + MemoryHeap::KHEAP_INITIAL_SIZE, MemoryHeap::KHEAP_LIMIT, 0, 0);

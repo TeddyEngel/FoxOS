@@ -7,6 +7,7 @@
 
 #include <kernel/MemoryBlockHeader.h>
 #include <kernel/PageTypes.h>
+#include <kernel/PagingManager.h>
 
 const uint32_t MemoryHeap::KHEAP_START = 0xC0000000;
 const uint32_t MemoryHeap::KHEAP_INITIAL_SIZE = 0x100000;
@@ -15,8 +16,9 @@ const uint32_t MemoryHeap::INDEX_SIZE = 0x20000;
 const uint32_t MemoryHeap::MAGIC = 0x123890AB;
 const uint32_t MemoryHeap::MIN_SIZE = 0x70000;
 
-MemoryHeap::MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readOnly)
-    : _index((void*)start, INDEX_SIZE, &MemoryBlockHeader::less_than)
+MemoryHeap::MemoryHeap(PagingManager& pagingManager, uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readOnly)
+    : _pagingManager(pagingManager)
+    , _index((void*)start, INDEX_SIZE, &MemoryBlockHeader::less_than)
     , _startAddress(start)
     , _endAddress(end)
     , _maxAddress(max)
@@ -34,16 +36,7 @@ MemoryHeap::MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t super
    _startAddress += sizeof(type_t) * INDEX_SIZE;
 
    // Make sure the start address is page-aligned.
-   if (_startAddress & 0xFFFFF000 != 0)
-   {
-       _startAddress &= 0xFFFFF000;
-       _startAddress += PAGE_SIZE;
-   }
-
-   // printf("memory heap address: %d\n", this);
-   // printf("ordered_array address: %d\n", &this->_index);
-   // printf("ordered_array size: %d\n", this->_index._size);
-   // printf("ordered_array size address: %d\n", &this->_index._size);
+   _startAddress = PagingManager::getNearestPageValue(_startAddress);
 
    // We start off with one large hole in the index.
    MemoryBlockHeader* hole = (MemoryBlockHeader*)_startAddress;
@@ -51,7 +44,6 @@ MemoryHeap::MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t super
    hole->_magic = MAGIC;
    hole->_isHole = 1;
    _index.insert((type_t)hole);
-   // printf("ordered_array size: %d\n", this->_index._size);
 }
 
 void* MemoryHeap::operator new(std::size_t size)
@@ -150,4 +142,31 @@ int32_t MemoryHeap::findSmallestHole(uint32_t size, bool pageAlign)
     if (iterator == _index._size)
        return -1; // We got to the end and didn't find anything.
     return iterator;
+} 
+
+bool MemoryHeap::expand(uint32_t newSize)
+{
+    if (newSize <= _endAddress - _startAddress)
+        return false;
+   // ASSERT(newSize > _endAddress - _startAddress);
+
+   // Get the nearest following page boundary.
+    newSize = PagingManager::getNearestPageValue(newSize);
+
+   // Make sure we are not overreaching ourselves.
+    if (_startAddress + newSize > _maxAddress)
+        return false;
+    // ASSERT(_startAddress+newSize <= max_address);
+
+   // This should always be on a page boundary.
+    uint32_t oldSize = _endAddress - _startAddress;
+    uint32_t i = oldSize;
+
+    while (i < newSize)
+    {
+        _pagingManager.allocFrame(_pagingManager.getKernelPage(_startAddress + i, 1), _supervisor ? 1 : 0, _readOnly ? 0 : 1);
+        i += PAGE_SIZE;
+    }
+    _endAddress = _startAddress + newSize;
+    return true;
 } 

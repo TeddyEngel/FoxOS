@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <ordered_array>
 
+#include <kernel/PagingManager.h>
 #include <kernel/MemoryBlockHeader.h>
 #include <kernel/MemoryBlockFooter.h>
 
@@ -19,7 +20,7 @@ public:
   static const uint32_t MIN_SIZE;
 
 public:
-  MemoryHeap(uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readOnly);
+  MemoryHeap(PagingManager& pagingManager, uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readOnly);
 
   static void* operator new(std::size_t size);
   // Create a new heap
@@ -36,7 +37,11 @@ public:
 
   int32_t findSmallestHole(uint32_t size, bool pageAlign);
 
+  // At points we will need to alter the size of our heap. If we run out of space, we will need more. If we reclaim space, we may need less. 
+  bool expand(uint32_t newSize);
+
 public:
+  PagingManager& _pagingManager;
   ordered_array _index;
   uint32_t _startAddress; // The start of our allocated space.
   uint32_t _endAddress;   // The end of our allocated space. May be expanded up to max_address.
