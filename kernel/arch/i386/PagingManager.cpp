@@ -82,23 +82,9 @@ void PagingManager::switchPageDirectory(page_directory_t* dir)
     asm volatile("mov %0, %%cr0":: "r"(cr0));
 }
 
-page_t* PagingManager::getPage(uint32_t address, int make, page_directory_t* dir)
+page_t* PagingManager::getKernelPage(uint32_t address, int make)
 {
-    // Turn the address into an index.
-    address /= PAGE_SIZE;
-    // Find the page table containing this address.
-    uint32_t table_idx = address / PAGE_TABLES_PER_DIRECTORY;
-    if (dir->tables[table_idx]) // If this table is already assigned
-      return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
-    else if(make)
-    {
-       uint32_t tmp;
-       dir->tables[table_idx] = (page_table_t*)kmalloc_ap(sizeof(page_table_t), &tmp);
-       memset(dir->tables[table_idx], 0, PAGE_SIZE);
-       dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
-       return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
-    }
-    return NULL;
+  return getPage(address, make, _kernelDirectory);
 }
 
 void PagingManager::onPageFault(const registers_t& regs)
@@ -127,9 +113,38 @@ void PagingManager::onPageFault(const registers_t& regs)
   _kernelManager.panic("Page fault");
 }
 
+uint32_t PagingManager::getNearestPageValue(uint32_t value)
+{
+  if ((value & 0xFFFFF000) != 0)
+  {
+     value &= 0xFFFFF000;
+     value += PAGE_SIZE;
+  }
+  return value;
+}
+
 void PagingManager::onPageFaultHook(const registers_t& regs)
 {
     kernelManager.getPagingManager().onPageFault(regs);
+}
+
+page_t* PagingManager::getPage(uint32_t address, int make, page_directory_t* dir)
+{
+    // Turn the address into an index.
+    address /= PAGE_SIZE;
+    // Find the page table containing this address.
+    uint32_t table_idx = address / PAGE_TABLES_PER_DIRECTORY;
+    if (dir->tables[table_idx]) // If this table is already assigned
+      return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
+    else if(make)
+    {
+       uint32_t tmp;
+       dir->tables[table_idx] = (page_table_t*)kmalloc_ap(sizeof(page_table_t), &tmp);
+       memset(dir->tables[table_idx], 0, PAGE_SIZE);
+       dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
+       return &dir->tables[table_idx]->pages[address % PAGES_PER_TABLE];
+    }
+    return NULL;
 }
 
 void PagingManager::setFrame(uint32_t frameAddress)
