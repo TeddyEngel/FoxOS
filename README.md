@@ -1,4 +1,4 @@
-FoxOS is a new operating system featuring foxes
+FoxOS is a simple operating system with a c++ kernel
 
 Prerequisites
 -------------
